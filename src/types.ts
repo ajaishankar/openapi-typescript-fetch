@@ -14,33 +14,46 @@ export type OpenapiPaths<Paths> = {
 }
 
 export type OpArgType<OP> = OP extends {
-  parameters: {
+  parameters?: {
     path?: infer P
     query?: infer Q
     body?: infer B
   }
-}
-  ? P & Q & (B extends Record<string, unknown> ? B[keyof B] : unknown)
-  : Record<string, never>
-
-// openapi 2 response type
-export type OpReturnType<OP> = OP extends {
-  responses: {
-    200: {
-      schema: infer R
+  // openapi 3
+  requestBody?: {
+    content: {
+      'application/json': infer RB
     }
   }
 }
-  ? R
-  : OP extends {
-      responses: {
-        default: infer D
-      }
-    }
+  ? P & Q & (B extends Record<string, unknown> ? B[keyof B] : unknown) & RB
+  : Record<string, never>
+
+export type OpDefaultReturnType<OP> = OP extends {
+  responses: {
+    default: infer D
+  }
+}
   ? D extends { schema: infer S }
     ? S
+    : D extends { content: { 'application/json': infer C } } // openapi 3
+    ? C
     : D
   : unknown
+
+export type OpReturnType<OP> = OP extends {
+  responses: {
+    200: {
+      schema?: infer R
+      // openapi 3
+      content?: {
+        'application/json': infer C
+      }
+    }
+  }
+}
+  ? R & C
+  : OpDefaultReturnType<OP>
 
 export type CustomRequestInit = Omit<RequestInit, 'headers'> & {
   readonly headers: Headers
@@ -64,7 +77,7 @@ type _CreateFetch<OP, Q = never> = [Q] extends [never]
   ? () => TypedFetch<OpReturnType<OP>, OpArgType<OP>>
   : (query: Q) => TypedFetch<OpReturnType<OP>, OpArgType<OP>>
 
-export type CreateFetch<M, OP> = M extends 'post' | 'put' | 'patch'
+export type CreateFetch<M, OP> = M extends 'post' | 'put' | 'patch' | 'delete'
   ? OP extends { parameters: { query: infer Q } }
     ? _CreateFetch<OP, { [K in keyof Q]: true | 1 }>
     : _CreateFetch<OP>

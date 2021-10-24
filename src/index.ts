@@ -6,6 +6,7 @@ import type {
   FetchReturnType,
   Middleware,
   OpArgType,
+  OpDefaultReturnType,
   OpReturnType,
 } from './types'
 
@@ -13,6 +14,7 @@ import { ApiError } from './types'
 
 export type {
   OpArgType,
+  OpDefaultReturnType,
   OpReturnType,
   FetchArgType,
   FetchReturnType,

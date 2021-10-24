@@ -82,6 +82,12 @@ function getHeaders(init?: HeadersInit) {
   return headers
 }
 
+function getBody(method: Method, payload: Record<string, unknown>) {
+  const body = sendBody(method) ? JSON.stringify(payload) : undefined
+  // if delete don't send body if empty
+  return method === 'delete' && body === '{}' ? undefined : body
+}
+
 function mergeRequestInit(
   first?: RequestInit,
   second?: RequestInit,
@@ -110,7 +116,7 @@ function getFetchParams(request: Request) {
     ...request.init,
     method: request.method.toUpperCase(),
     headers,
-    body: sendBody(request.method) ? JSON.stringify(payload) : undefined,
+    body: getBody(request.method, payload),
   }
 
   return { url, init }

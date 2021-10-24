@@ -1,9 +1,8 @@
 import 'whatwg-fetch'
 
 import { server } from './mocks/server'
-import { ApiError, FetchArgType, Fetcher, FetchReturnType } from '../src'
+import { ApiError, Fetcher } from '../src'
 import { Data, paths } from './paths'
-import { paths as stripePaths } from './examples/stripe-openapi2'
 
 beforeAll(() => server.listen())
 afterEach(() => server.resetHandlers())
@@ -180,21 +179,5 @@ describe('fetch', () => {
     expect(data.headers.mw1).toEqual('true')
     expect(captured.url).toEqual('https://api.backend.dev/bodyquery/1?scalar=a')
     expect(captured.body).toEqual('{"list":["b","c"]}')
-  })
-
-  it('typecheck complex api', () => {
-    const stripe = Fetcher.for<stripePaths>()
-
-    const createAccount = stripe.path('/v1/account').method('post').create()
-
-    type Arg = FetchArgType<typeof createAccount>
-    type Ret = FetchReturnType<typeof createAccount>
-
-    const arg: Arg = {}
-    const ret: Ret = {} as any
-
-    // just typechecking
-    expect(arg.company).toBeUndefined()
-    expect(ret.company).toBeUndefined()
   })
 })
