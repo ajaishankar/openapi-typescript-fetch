@@ -141,7 +141,7 @@ describe('fetch', () => {
     expect(data.headers).toEqual({ ...expectedHeaders, admin: 'true' })
   })
 
-  it('use middleware', async () => {
+  it('middleware', async () => {
     const fun = fetcher
       .path('/bodyquery/{id}')
       .method('post')

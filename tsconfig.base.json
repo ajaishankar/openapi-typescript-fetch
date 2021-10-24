@@ -1,16 +1,17 @@
 {
     "compilerOptions": {
-      "strict": true,
-      "alwaysStrict": true,
-      "strictNullChecks": true,
-      "noImplicitAny": true,
+      "baseUrl": "./src",
+      "declaration": true,
       "esModuleInterop": true,
-      "emitDecoratorMetadata": true,
-      "experimentalDecorators": true,
-      "noUnusedLocals": true,
-      "skipLibCheck": true,
+      "forceConsistentCasingInFileNames": true,
+      "lib": ["dom", "dom.iterable", "ES2018"],
+      "moduleResolution": "Node",
+      "noImplicitReturns": true,
+      "removeComments": true,
       "sourceMap": true,
-      "jsx": "react",
-      "downlevelIteration": true
-    }
-}
+      "strict": true,
+      "target": "ES2015",
+      "useDefineForClassFields": true
+    },
+    "include": ["src"]
+  }
