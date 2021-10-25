@@ -2,6 +2,16 @@
 
 A typed fetch client for [openapi-typescript](https://github.com/drwpow/openapi-typescript) 
 
+### Install
+
+```bash
+npm install openapi-typescript-fetch
+```
+Or
+```bash
+yarn add openapi-typescript-fetch
+```
+
 **Features**
 
 Supports JSON request and responses
