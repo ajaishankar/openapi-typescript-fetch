@@ -25,8 +25,11 @@ npx openapi-typescript https://petstore.swagger.io/v2/swagger.json --output pets
 ```ts
 import 'whatwg-fetch'
 
+import { Fetcher } from 'openapi-typescript-fetch'
+
 import { paths } from './petstore'
 
+// declare fetcher for paths
 const fetcher = Fetcher.for<paths>()
 
 // global configuration
