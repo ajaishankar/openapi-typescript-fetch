@@ -1,6 +1,6 @@
 {
   "name": "openapi-typescript-fetch",
-  "description": "A typed fetch wrapper for openapi-typescript",
+  "description": "A typed fetch client for openapi-typescript",
   "version": "1.0.0",
   "engines": {
     "node": ">= 12.0.0",
@@ -24,6 +24,7 @@
   },
   "keywords": [
     "fetch",
+    "client",
     "swagger",
     "typescript",
     "ts",
