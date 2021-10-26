@@ -53,7 +53,7 @@ fetcher.configure({
       ...
     },
   },
-  use: [...] // middewares
+  use: [...] // middlewares
 })
 
 // create fetch operations

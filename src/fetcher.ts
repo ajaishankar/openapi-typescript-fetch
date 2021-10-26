@@ -43,7 +43,7 @@ function queryString(params: Record<string, unknown>): string {
 
 function getPath(path: string, payload: Record<string, any>) {
   return path.replace(/\{([^}]+)\}/g, (_, key) => {
-    const value = payload[key]
+    const value = encodeURIComponent(payload[key])
     delete payload[key]
     return value
   })

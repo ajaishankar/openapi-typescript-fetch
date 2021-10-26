@@ -33,12 +33,12 @@ describe('fetch', () => {
 
     const { ok, status, statusText, data } = await fun({
       a: 1,
-      b: 2,
+      b: '/',
       scalar: 'a',
       list: ['b', 'c'],
     })
 
-    expect(data.params).toEqual({ a: '1', b: '2' })
+    expect(data.params).toEqual({ a: '1', b: '%2F' })
     expect(data.query).toEqual({ scalar: 'a', list: ['b', 'c'] })
     expect(data.headers).toEqual(expectedHeaders)
     expect(ok).toBe(true)
@@ -128,7 +128,7 @@ describe('fetch', () => {
     const { data } = await fun(
       {
         a: 1,
-        b: 2,
+        b: '2',
         scalar: 'a',
         list: ['b', 'c'],
       },
