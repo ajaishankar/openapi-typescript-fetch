@@ -1,3 +1,6 @@
+[![version(scoped)](https://img.shields.io/npm/v/openapi-typescript-fetch.svg)](https://www.npmjs.com/package/openapi-typescript-fetch)
+[![codecov](https://codecov.io/gh/ajaishankar/openapi-typescript-fetch/branch/main/graph/badge.svg?token=Z8GQ6M5KAR)](https://codecov.io/gh/ajaishankar/openapi-typescript-fetch)
+
 # 📘️ openapi-typescript-fetch
 
 A typed fetch client for [openapi-typescript](https://github.com/drwpow/openapi-typescript) 
