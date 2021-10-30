@@ -47,11 +47,22 @@ const methods = {
     return (rest as any)[method](`${HOST}/bodyquery/:id`, getResult)
   }),
   withError: [
-    rest.get(`${HOST}/error`, (req, res, ctx) => {
+    rest.get(`${HOST}/error/:status`, (req, res, ctx) => {
+      const status = Number(req.params.status)
       const detail = req.url.searchParams.get('detail') === 'true'
       return detail
-        ? res(ctx.status(400), ctx.json({ message: 'Really Bad Request' }))
-        : res(ctx.status(400))
+        ? res(
+            ctx.status(status),
+            status === 400
+              ? ctx.json({ badRequest: true })
+              : status === 500
+              ? ctx.json({ internalServer: true })
+              : ctx.json({ message: 'unknown error' }),
+          )
+        : res(ctx.status(status))
+    }),
+    rest.get(`${HOST}/networkerror`, (req, res) => {
+      return res.networkError('failed to connect')
     }),
   ],
 }

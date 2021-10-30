@@ -68,6 +68,37 @@ const { status, data: pets } = await findPetsByStatus({
 console.log(pets[0])
 ```
 
+### Typed Error Handling
+
+A non-ok fetch response throws a generic `ApiError`
+
+But an Openapi document can declare a different response type for each status code, or a default error response type
+
+These can be accessed via a `discriminated union` on status, as in code snippet below
+
+```ts
+const findPetsByStatus = fetcher.path('/pet/findByStatus').method('get').create()
+const addPet = fetcher.path('/pet').method('post').create()
+
+try {
+  await findPetsByStatus({ ... })
+  await addPet({ ... })
+} catch(e) {
+  // check which operation threw the exception
+  if (e instanceof addPet.Error) {
+    // get discriminated union { status, data } 
+    const error = e.getActualType()
+    if (error.status === 400) {
+      error.data.validationErrors // only available for a 400 response
+    } else if (error.status === 500) {
+      error.data.errorMessage // only available for a 500 response
+    } else {
+      ...
+    }
+  }
+}
+```
+
 ### Middleware
 
 Middlewares can be used to pre and post process fetch operations (log api calls, add auth headers etc)

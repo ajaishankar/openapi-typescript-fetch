@@ -29,31 +29,51 @@ export type OpArgType<OP> = OP extends {
   ? P & Q & (B extends Record<string, unknown> ? B[keyof B] : unknown) & RB
   : Record<string, never>
 
-export type OpDefaultReturnType<OP> = OP extends {
-  responses: {
-    default: infer D
-  }
+type OpResponseTypes<OP> = OP extends {
+  responses: infer R
 }
-  ? D extends { schema: infer S }
-    ? S
-    : D extends { content: { 'application/json': infer C } } // openapi 3
-    ? C
-    : D
+  ? {
+      [S in keyof R]: R[S] extends { schema?: infer S } // openapi 2
+        ? S
+        : R[S] extends { content: { 'application/json': infer C } } // openapi 3
+        ? C
+        : S extends 'default'
+        ? R[S]
+        : unknown
+    }
+  : never
+
+type _OpReturnType<T> = 200 extends keyof T
+  ? T[200]
+  : 'default' extends keyof T
+  ? T['default']
   : unknown
 
-export type OpReturnType<OP> = OP extends {
-  responses: {
-    200: {
-      schema?: infer R
-      // openapi 3
-      content?: {
-        'application/json': infer C
-      }
-    }
+export type OpReturnType<OP> = _OpReturnType<OpResponseTypes<OP>>
+
+type _OpDefaultReturnType<T> = 'default' extends keyof T
+  ? T['default']
+  : unknown
+
+export type OpDefaultReturnType<OP> = _OpDefaultReturnType<OpResponseTypes<OP>>
+
+// private symbol to prevent narrowing on "default" error status
+const never: unique symbol = Symbol()
+
+type _OpErrorType<T> = {
+  [S in Exclude<keyof T, 200>]: {
+    status: S extends 'default' ? typeof never : S
+    data: T[S]
   }
-}
-  ? R & C
-  : OpDefaultReturnType<OP>
+}[Exclude<keyof T, 200>]
+
+type Coalesce<T, D> = [T] extends [never] ? D : T
+
+// coalesce default error type to unknown
+export type OpErrorType<OP> = Coalesce<
+  _OpErrorType<OpResponseTypes<OP>>,
+  unknown
+>
 
 export type CustomRequestInit = Omit<RequestInit, 'headers'> & {
   readonly headers: Headers
@@ -64,18 +84,32 @@ export type Fetch = (
   init: CustomRequestInit,
 ) => Promise<ApiResponse>
 
-export type TypedFetch<R, A> = (
-  arg: A,
+export type _TypedFetch<OP> = (
+  arg: OpArgType<OP>,
   init?: RequestInit,
-) => Promise<ApiResponse<R>>
+) => Promise<ApiResponse<OpReturnType<OP>>>
 
-export type FetchArgType<F> = F extends TypedFetch<any, infer A> ? A : never
+export type TypedFetch<OP> = _TypedFetch<OP> & {
+  Error: new (error: ApiError) => ApiError & {
+    getActualType: () => OpErrorType<OP>
+  }
+}
 
-export type FetchReturnType<F> = F extends TypedFetch<infer R, any> ? R : never
+export type FetchArgType<F> = F extends TypedFetch<infer OP>
+  ? OpArgType<OP>
+  : never
+
+export type FetchReturnType<F> = F extends TypedFetch<infer OP>
+  ? OpReturnType<OP>
+  : never
+
+export type FetchErrorType<F> = F extends TypedFetch<infer OP>
+  ? OpErrorType<OP>
+  : never
 
 type _CreateFetch<OP, Q = never> = [Q] extends [never]
-  ? () => TypedFetch<OpReturnType<OP>, OpArgType<OP>>
-  : (query: Q) => TypedFetch<OpReturnType<OP>, OpArgType<OP>>
+  ? () => TypedFetch<OP>
+  : (query: Q) => TypedFetch<OP>
 
 export type CreateFetch<M, OP> = M extends 'post' | 'put' | 'patch' | 'delete'
   ? OP extends { parameters: { query: infer Q } }
@@ -121,7 +155,7 @@ export class ApiError extends Error {
   readonly statusText: string
   readonly data: any
 
-  constructor(response: ApiResponse) {
+  constructor(response: Omit<ApiResponse, 'ok'>) {
     super(response.statusText)
     Object.setPrototypeOf(this, new.target.prototype)
 

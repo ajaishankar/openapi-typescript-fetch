@@ -46,13 +46,31 @@ export type paths = {
     patch: BodyAndQuery
     delete: BodyAndQuery
   }
-  '/error': {
+  '/error/{status}': {
     get: {
       parameters: {
+        path: { status: number }
         query: { detail?: boolean }
       }
       responses: {
+        400: {
+          schema: { badRequest: boolean } // openapi 2
+        }
+        500: {
+          content: {
+            'application/json': { internalServer: boolean } // openapi 3
+          }
+        }
         default: { message: string }
+      }
+    }
+  }
+  '/networkerror': {
+    get: {
+      // eslint-disable-next-line @typescript-eslint/ban-types
+      parameters: {}
+      responses: {
+        default: string
       }
     }
   }

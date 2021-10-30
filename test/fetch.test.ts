@@ -85,13 +85,16 @@ describe('fetch', () => {
   })
 
   it('GET /error', async () => {
-    expect.assertions(1)
+    expect.assertions(3)
 
-    const fun = fetcher.path('/error').method('get').create()
+    const fun = fetcher.path('/error/{status}').method('get').create()
 
     try {
-      await fun({})
+      await fun({ status: 400 })
     } catch (err) {
+      expect(err instanceof ApiError).toBe(true)
+      expect(err instanceof fun.Error).toBe(true)
+
       if (err instanceof ApiError) {
         expect(err).toMatchObject({
           status: 400,
@@ -103,23 +106,61 @@ describe('fetch', () => {
   })
 
   it('GET /error (json body)', async () => {
-    expect.assertions(1)
+    const fun = fetcher.path('/error/{status}').method('get').create()
 
-    const fun = fetcher.path('/error').method('get').create()
+    const errors = {
+      badRequest: false,
+      internalServer: false,
+      other: false,
+    }
 
-    try {
-      await fun({ detail: true })
-    } catch (e) {
-      if (e instanceof ApiError) {
-        expect(e).toMatchObject({
-          status: 400,
-          statusText: 'Bad Request',
-          data: {
-            message: 'Really Bad Request',
-          },
-        })
+    const handleError = (e: any) => {
+      if (e instanceof fun.Error) {
+        const error = e.getActualType()
+        // discriminated union
+        if (error.status === 400) {
+          errors.badRequest = error.data.badRequest
+        } else if (error.status === 500) {
+          errors.internalServer = error.data.internalServer
+        } else {
+          errors.other = error.data.message === 'unknown error'
+        }
       }
     }
+
+    for (const status of [400, 500, 503]) {
+      try {
+        await fun({ status, detail: true })
+      } catch (e) {
+        handleError(e)
+      }
+    }
+
+    expect(errors).toEqual({
+      badRequest: true,
+      internalServer: true,
+      other: true,
+    })
+  })
+
+  it('network error', async () => {
+    expect.assertions(1)
+
+    const fun = fetcher.path('/networkerror').method('get').create()
+
+    try {
+      await fun({})
+    } catch (e) {
+      expect(e).not.toBeInstanceOf(ApiError)
+    }
+  })
+
+  it('operation specific error type', () => {
+    const one = fetcher.path('/query/{a}/{b}').method('get').create()
+    const two = fetcher.path('/body/{id}').method('post').create()
+
+    expect(new one.Error({} as any)).not.toBeInstanceOf(two.Error)
+    expect(new two.Error({} as any)).not.toBeInstanceOf(one.Error)
   })
 
   it('override init', async () => {

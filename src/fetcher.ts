@@ -7,8 +7,12 @@ import {
   FetchConfig,
   Method,
   Middleware,
+  OpArgType,
   OpenapiPaths,
+  OpErrorType,
   Request,
+  _TypedFetch,
+  TypedFetch,
 } from './types'
 
 const sendBody = (method: Method) =>
@@ -185,6 +189,34 @@ async function fetchUrl<R>(request: Request) {
   return response as ApiResponse<R>
 }
 
+function createFetch<OP>(fetch: _TypedFetch<OP>): TypedFetch<OP> {
+  const fun = async (payload: OpArgType<OP>, init?: RequestInit) => {
+    try {
+      return await fetch(payload, init)
+    } catch (err) {
+      if (err instanceof ApiError) {
+        throw new fun.Error(err)
+      }
+      throw err
+    }
+  }
+
+  fun.Error = class extends ApiError {
+    constructor(error: ApiError) {
+      super(error)
+      Object.setPrototypeOf(this, new.target.prototype)
+    }
+    getActualType() {
+      return {
+        status: this.status,
+        data: this.data,
+      } as OpErrorType<OP>
+    }
+  }
+
+  return fun
+}
+
 function fetcher<Paths>() {
   let baseUrl = ''
   let defaultInit: RequestInit = {}
@@ -201,16 +233,18 @@ function fetcher<Paths>() {
     use: (mw: Middleware) => middlewares.push(mw),
     path: <P extends keyof Paths>(path: P) => ({
       method: <M extends keyof Paths[P]>(method: M) => ({
-        create: ((queryParams?: Record<string, true | 1>) => (payload, init) =>
-          fetchUrl({
-            baseUrl: baseUrl || '',
-            path: path as string,
-            method: method as Method,
-            queryParams: Object.keys(queryParams || {}),
-            payload,
-            init: mergeRequestInit(defaultInit, init),
-            fetch,
-          })) as CreateFetch<M, Paths[P][M]>,
+        create: ((queryParams?: Record<string, true | 1>) =>
+          createFetch((payload, init) =>
+            fetchUrl({
+              baseUrl: baseUrl || '',
+              path: path as string,
+              method: method as Method,
+              queryParams: Object.keys(queryParams || {}),
+              payload,
+              init: mergeRequestInit(defaultInit, init),
+              fetch,
+            }),
+          )) as CreateFetch<M, Paths[P][M]>,
       }),
     }),
   }
