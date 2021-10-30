@@ -129,8 +129,10 @@ fetcher.use(logger)
 
 - `OpArgType` - Infer argument type of an operation
 - `OpReturnType` - Infer return type of an operation
+- `OpErrorType` - Infer error type of an operation
 - `FetchArgType` - Argument type of a typed fetch operation
 - `FetchReturnType` - Return type of a typed fetch operation
+- `FetchErrorType` - Return error type of a typed fetch operation
 
 ```ts
 import { paths, operations } from './petstore'
