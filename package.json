@@ -7,7 +7,7 @@
     "npm": ">= 7.0.0"
   },
   "author": "Ajai Shankar",
-  "license": "ISC",
+  "license": "MIT",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
   "exports": {
