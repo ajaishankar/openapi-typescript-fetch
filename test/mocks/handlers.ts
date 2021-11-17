@@ -61,6 +61,9 @@ const methods = {
           )
         : res(ctx.status(status))
     }),
+    rest.get(`${HOST}/defaulterror`, (req, res, ctx) => {
+      return res(ctx.status(500), ctx.body('internal server error'))
+    }),
     rest.get(`${HOST}/networkerror`, (req, res) => {
       return res.networkError('failed to connect')
     }),

@@ -69,10 +69,10 @@ type _OpErrorType<T> = {
 
 type Coalesce<T, D> = [T] extends [never] ? D : T
 
-// coalesce default error type to unknown
+// coalesce default error type
 export type OpErrorType<OP> = Coalesce<
   _OpErrorType<OpResponseTypes<OP>>,
-  unknown
+  { status: number; data: any }
 >
 
 export type CustomRequestInit = Omit<RequestInit, 'headers'> & {

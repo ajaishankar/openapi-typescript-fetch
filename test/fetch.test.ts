@@ -142,6 +142,21 @@ describe('fetch', () => {
       other: true,
     })
   })
+  it('default error type {status: number, data: any}', async () => {
+    expect.assertions(2)
+
+    const fun = fetcher.path('/defaulterror').method('get').create()
+
+    try {
+      await fun({})
+    } catch (e) {
+      if (e instanceof fun.Error) {
+        const error = e.getActualType()
+        expect(error.status).toBe(500)
+        expect(error.data).toEqual('internal server error')
+      }
+    }
+  })
 
   it('network error', async () => {
     expect.assertions(1)

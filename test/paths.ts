@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 export type Data = {
   params: string[]
   headers: Record<string, string>
@@ -65,9 +66,14 @@ export type paths = {
       }
     }
   }
+  '/defaulterror': {
+    get: {
+      parameters: {}
+      responses: {}
+    }
+  }
   '/networkerror': {
     get: {
-      // eslint-disable-next-line @typescript-eslint/ban-types
       parameters: {}
       responses: {
         default: string
