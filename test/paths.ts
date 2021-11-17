@@ -28,7 +28,7 @@ type BodyAndQuery = {
     query: { scalar: string }
     body: { payload: { list: string[] } }
   }
-  responses: { 200: { schema: Data } }
+  responses: { 201: { schema: Data } }
 }
 
 export type paths = {

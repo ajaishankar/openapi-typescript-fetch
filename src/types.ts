@@ -45,6 +45,8 @@ type OpResponseTypes<OP> = OP extends {
 
 type _OpReturnType<T> = 200 extends keyof T
   ? T[200]
+  : 201 extends keyof T
+  ? T[201]
   : 'default' extends keyof T
   ? T['default']
   : unknown
@@ -61,11 +63,11 @@ export type OpDefaultReturnType<OP> = _OpDefaultReturnType<OpResponseTypes<OP>>
 const never: unique symbol = Symbol()
 
 type _OpErrorType<T> = {
-  [S in Exclude<keyof T, 200>]: {
+  [S in Exclude<keyof T, 200 | 201>]: {
     status: S extends 'default' ? typeof never : S
     data: T[S]
   }
-}[Exclude<keyof T, 200>]
+}[Exclude<keyof T, 200 | 201>]
 
 type Coalesce<T, D> = [T] extends [never] ? D : T
 
