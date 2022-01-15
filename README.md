@@ -125,6 +125,30 @@ fetcher.configure({
 fetcher.use(logger)
 ```
 
+### Server Side Usage
+
+This library can be used server side with [node-fetch](https://www.npmjs.com/package/node-fetch)
+
+Node CommonJS setup
+```ts
+// install node-fetch v2
+npm install node-fetch@2
+npm install @types/node-fetch@2
+
+// fetch-polyfill.ts
+import fetch, { Headers, Request, Response } from 'node-fetch'
+
+if (!globalThis.fetch) {
+    globalThis.fetch = fetch as any
+    globalThis.Headers = Headers as any
+    globalThis.Request = Request as any
+    globalThis.Response = Response as any
+}
+
+// index.ts
+import './fetch-polyfill'
+```
+
 ### Utility Types
 
 - `OpArgType` - Infer argument type of an operation
