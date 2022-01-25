@@ -10,6 +10,7 @@ import type {
   OpErrorType,
   OpDefaultReturnType,
   OpReturnType,
+  TypedFetch,
 } from './types'
 
 import { ApiError } from './types'
@@ -24,6 +25,7 @@ export type {
   FetchErrorType,
   ApiResponse,
   Middleware,
+  TypedFetch,
 }
 
 export { Fetcher, ApiError }
