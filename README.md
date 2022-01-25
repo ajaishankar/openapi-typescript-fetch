@@ -156,21 +156,27 @@ import './fetch-polyfill'
 - `OpErrorType` - Infer error type of an operation
 - `FetchArgType` - Argument type of a typed fetch operation
 - `FetchReturnType` - Return type of a typed fetch operation
-- `FetchErrorType` - Return error type of a typed fetch operation
+- `FetchErrorType` - Error type of a typed fetch operation
+- `TypedFetch` - Fetch operation type
 
 ```ts
 import { paths, operations } from './petstore'
 
 type Arg = OpArgType<operations['findPetsByStatus']>
 type Ret = OpReturnType<operations['findPetsByStatus']>
+type Err = OpErrorType<operations['findPetsByStatus']>
 
 type Arg = OpArgType<paths['/pet/findByStatus']['get']>
 type Ret = OpReturnType<paths['/pet/findByStatus']['get']>
+type Err = OpErrorType<paths['/pet/findByStatus']['get']>
+
+type FindPetsByStatus = TypedFetch<operations['findPetsByStatus']>
 
 const findPetsByStatus = fetcher.path('/pet/findByStatus').method('get').create()
 
 type Arg = FetchArgType<typeof findPetsByStatus>
 type Ret = FetchReturnType<typeof findPetsByStatus>
+type Err = FetchErrorType<typeof findPetsByStatus>
 ```
 
 Happy fetching! 👍

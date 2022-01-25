@@ -7,6 +7,7 @@ import {
   OpDefaultReturnType,
   OpErrorType,
   OpReturnType,
+  TypedFetch,
 } from '../src'
 import { paths as paths2 } from './examples/stripe-openapi2'
 import { paths as paths3 } from './examples/stripe-openapi3'
@@ -66,8 +67,13 @@ describe('infer', () => {
   })
 
   describe('fetch', () => {
+    type CreateLink = TypedFetch<Op2>
+
     const fetcher = Fetcher.for<paths2>()
-    const createLink = fetcher.path('/v1/account_links').method('post').create()
+    const createLink: CreateLink = fetcher
+      .path('/v1/account_links')
+      .method('post')
+      .create()
 
     type Arg = FetchArgType<typeof createLink>
     type Ret = FetchReturnType<typeof createLink>
