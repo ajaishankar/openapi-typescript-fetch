@@ -25,7 +25,7 @@ function queryString(params: Record<string, unknown>): string {
   const qs: string[] = []
 
   const encode = (key: string, value: unknown) =>
-    `${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`
+    `${encodeURI(key)}=${encodeURI(String(value))}`
 
   Object.keys(params).forEach((key) => {
     const value = params[key]
@@ -47,7 +47,7 @@ function queryString(params: Record<string, unknown>): string {
 
 function getPath(path: string, payload: Record<string, any>) {
   return path.replace(/\{([^}]+)\}/g, (_, key) => {
-    const value = encodeURIComponent(payload[key])
+    const value = encodeURI(payload[key])
     delete payload[key]
     return value
   })
