@@ -109,7 +109,7 @@ function mergeRequestInit(
 }
 
 function getFetchParams(request: Request) {
-  const payload = { ...request.payload } // clone payload
+  const payload = Array.isArray(request.payload) ? [...request.payload] : { ...request.payload } 
 
   const path = getPath(request.path, payload)
   const query = getQuery(request.method, payload, request.queryParams)
