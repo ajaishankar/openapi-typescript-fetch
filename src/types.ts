@@ -18,6 +18,8 @@ export type OpArgType<OP> = OP extends {
     path?: infer P
     query?: infer Q
     body?: infer B
+    header?: unknown // ignore
+    cookie?: unknown // ignore
   }
   // openapi 3
   requestBody?: {

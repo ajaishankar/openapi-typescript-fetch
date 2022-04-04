@@ -97,6 +97,34 @@ describe('infer', () => {
       expect(same).toBe(true)
     })
 
+    it('only header/cookie parameter with requestBody', () => {
+      type RequestBody = {
+        requestBody: {
+          content: {
+            'application/json': { bar: boolean }
+          }
+        }
+      }
+
+      type HeaderOnly = {
+        parameters: {
+          header: { foo: string }
+        }
+      } & RequestBody
+
+      type CookieOnly = {
+        parameters: {
+          cookie: { foo: string }
+        }
+      } & RequestBody
+
+      const header: Same<OpArgType<HeaderOnly>, { bar: boolean }> = true
+      const cookie: Same<OpArgType<CookieOnly>, { bar: boolean }> = true
+
+      expect(header).toBe(true)
+      expect(cookie).toBe(true)
+    })
+
     const err: Err = { data: { error: {} } } as any
     expect(err.data.error.charge).toBeUndefined()
   })
