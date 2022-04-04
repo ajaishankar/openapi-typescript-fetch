@@ -8,7 +8,7 @@
       "moduleResolution": "Node",
       "noImplicitReturns": true,
       "removeComments": true,
-      "sourceMap": true,
+      "sourceMap": false,
       "strict": true,
       "target": "ES2015",
       "useDefineForClassFields": true
