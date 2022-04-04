@@ -86,7 +86,7 @@ function getHeaders(init?: HeadersInit) {
   return headers
 }
 
-function getBody(method: Method, payload: Record<string, unknown>) {
+function getBody(method: Method, payload: any) {
   const body = sendBody(method) ? JSON.stringify(payload) : undefined
   // if delete don't send body if empty
   return method === 'delete' && body === '{}' ? undefined : body
@@ -109,7 +109,14 @@ function mergeRequestInit(
 }
 
 function getFetchParams(request: Request) {
-  const payload = Array.isArray(request.payload) ? [...request.payload] : { ...request.payload } 
+  // clone payload
+  // if body is a top level array [ 'a', 'b', param: value ] with param values
+  // using spread [ ...payload ] returns [ 'a', 'b' ] and skips custom keys
+  // cloning with Object.assign() preserves all keys
+  const payload = Object.assign(
+    Array.isArray(request.payload) ? [] : {},
+    request.payload,
+  )
 
   const path = getPath(request.path, payload)
   const query = getQuery(request.method, payload, request.queryParams)

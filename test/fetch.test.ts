@@ -65,6 +65,19 @@ describe('fetch', () => {
   })
 
   methods.forEach((method) => {
+    it(`${method.toUpperCase()} /bodyarray/{id}`, async () => {
+      const fun = fetcher.path('/bodyarray/{id}').method(method).create()
+
+      const { data } = await fun(Object.assign(['b', 'c'], { id: 1 }))
+
+      expect(data.params).toEqual({ id: '1' })
+      expect(data.body).toEqual(['b', 'c'])
+      expect(data.query).toEqual({})
+      expect(data.headers).toEqual(expectedHeaders)
+    })
+  })
+
+  methods.forEach((method) => {
     it(`${method.toUpperCase()} /bodyquery/{id}`, async () => {
       const fun = fetcher
         .path('/bodyquery/{id}')

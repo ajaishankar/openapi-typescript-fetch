@@ -136,7 +136,7 @@ export type Request = {
   method: Method
   path: string
   queryParams: string[] // even if a post these will be sent in query
-  payload: Record<string, unknown>
+  payload: any
   init?: RequestInit
   fetch: Fetch
 }

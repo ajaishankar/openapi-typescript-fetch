@@ -43,6 +43,9 @@ const methods = {
   withBody: ['post', 'put', 'patch', 'delete'].map((method) => {
     return (rest as any)[method](`${HOST}/body/:id`, getResult)
   }),
+  withBodyArray: ['post', 'put', 'patch', 'delete'].map((method) => {
+    return (rest as any)[method](`${HOST}/bodyarray/:id`, getResult)
+  }),
   withBodyAndQuery: ['post', 'put', 'patch', 'delete'].map((method) => {
     return (rest as any)[method](`${HOST}/bodyquery/:id`, getResult)
   }),
@@ -73,6 +76,7 @@ const methods = {
 export const handlers = [
   ...methods.withQuery,
   ...methods.withBody,
+  ...methods.withBodyArray,
   ...methods.withBodyAndQuery,
   ...methods.withError,
 ]

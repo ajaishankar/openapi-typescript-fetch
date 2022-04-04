@@ -3,7 +3,7 @@ export type Data = {
   params: string[]
   headers: Record<string, string>
   query: Record<string, string | string[]>
-  body: Record<string, any>
+  body: any
 }
 
 type Query = {
@@ -18,6 +18,14 @@ type Body = {
   parameters: {
     path: { id: number }
     body: { payload: { list: string[] } }
+  }
+  responses: { 200: { schema: Data } }
+}
+
+type BodyArray = {
+  parameters: {
+    path: { id: number }
+    body: { payload: string[] }
   }
   responses: { 200: { schema: Data } }
 }
@@ -40,6 +48,12 @@ export type paths = {
     put: Body
     patch: Body
     delete: Body
+  }
+  '/bodyarray/{id}': {
+    post: BodyArray
+    put: BodyArray
+    patch: BodyArray
+    delete: BodyArray
   }
   '/bodyquery/{id}': {
     post: BodyAndQuery
