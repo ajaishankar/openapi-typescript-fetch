@@ -1,4 +1,5 @@
 import { Fetcher } from './fetcher'
+import { arrayRequestBody } from './utils'
 
 import type {
   ApiResponse,
@@ -28,4 +29,4 @@ export type {
   TypedFetch,
 }
 
-export { Fetcher, ApiError }
+export { Fetcher, ApiError, arrayRequestBody }

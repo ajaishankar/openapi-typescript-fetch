@@ -1,7 +1,7 @@
 import 'whatwg-fetch'
 
 import { server } from './mocks/server'
-import { ApiError, Fetcher } from '../src'
+import { ApiError, arrayRequestBody, Fetcher } from '../src'
 import { Data, paths } from './paths'
 
 beforeAll(() => server.listen())
@@ -68,7 +68,7 @@ describe('fetch', () => {
     it(`${method.toUpperCase()} /bodyarray/{id}`, async () => {
       const fun = fetcher.path('/bodyarray/{id}').method(method).create()
 
-      const { data } = await fun(Object.assign(['b', 'c'], { id: 1 }))
+      const { data } = await fun(arrayRequestBody(['b', 'c'], { id: 1 }))
 
       expect(data.params).toEqual({ id: '1' })
       expect(data.body).toEqual(['b', 'c'])

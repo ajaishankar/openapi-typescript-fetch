@@ -179,4 +179,15 @@ type Ret = FetchReturnType<typeof findPetsByStatus>
 type Err = FetchErrorType<typeof findPetsByStatus>
 ```
 
+### Utility Methods
+
+- `arrayRequestBody` - Helper to merge params when request body is an array
+
+```ts
+
+const body = arrayRequestBody([{ item: 1}], { param: 2})
+
+// body type is { item: number }[] & { param: number }
+```
+
 Happy fetching! 👍
