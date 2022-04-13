@@ -98,7 +98,7 @@ function mergeRequestInit(
 ): RequestInit {
   const headers = new Headers(first?.headers)
   const other = new Headers(second?.headers)
-
+  
   for (const key of other.keys()) {
     const value = other.get(key)
     if (value != null) {
@@ -120,7 +120,7 @@ function getFetchParams(request: Request) {
 
   const path = getPath(request.path, payload)
   const query = getQuery(request.method, payload, request.queryParams)
-  const headers = getHeaders(request.init?.headers)
+  const headers = sendBody(request.method) ? getHeaders(request.init?.headers): new Headers(request.init?.headers)
   const url = request.baseUrl + path + query
 
   const init = {
