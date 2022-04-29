@@ -68,6 +68,19 @@ const { status, data: pets } = await findPetsByStatus({
 console.log(pets[0])
 ```
 
+If you have a path argument that you also want to appear in the root of the body payload, you can pass an optional third parameter to the created fetch method.
+
+To continue from the example above, it would look something like this:
+
+```ts
+// fetch
+const { status, data: pets } = await findPetsByStatus({
+  status: ['available', 'pending'],
+  undefined,
+  ['keyToParamToBePersistedToBody']
+})
+```
+
 ### Typed Error Handling
 
 A non-ok fetch response throws a generic `ApiError`
