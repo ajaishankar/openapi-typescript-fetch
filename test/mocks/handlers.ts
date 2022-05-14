@@ -64,6 +64,9 @@ const methods = {
           )
         : res(ctx.status(status))
     }),
+    rest.post(`${HOST}/nocontent`, (req, res, ctx) => {
+      return res(ctx.status(204))
+    }),
     rest.get(`${HOST}/defaulterror`, (req, res, ctx) => {
       return res(ctx.status(500), ctx.body('internal server error'))
     }),

@@ -61,6 +61,14 @@ export type paths = {
     patch: BodyAndQuery
     delete: BodyAndQuery
   }
+  '/nocontent': {
+    post: {
+      parameters: {}
+      responses: {
+        204: unknown
+      }
+    }
+  }
   '/error/{status}': {
     get: {
       parameters: {

@@ -111,6 +111,13 @@ describe('fetch', () => {
     expect(data.headers).not.toHaveProperty('content-type')
   })
 
+  it(`POST /nocontent`, async () => {
+    const fun = fetcher.path('/nocontent').method('post').create()
+    const { status, data } = await fun(undefined)
+    expect(status).toBe(204)
+    expect(data).toBeUndefined()
+  })
+
   it('GET /error', async () => {
     expect.assertions(3)
 

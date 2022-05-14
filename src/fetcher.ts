@@ -136,6 +136,9 @@ function getFetchParams(request: Request) {
 
 async function getResponseData(response: Response) {
   const contentType = response.headers.get('content-type')
+  if (response.status === 204 /* no content */) {
+    return undefined
+  }
   if (contentType && contentType.indexOf('application/json') !== -1) {
     return await response.json()
   }
