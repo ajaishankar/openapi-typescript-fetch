@@ -181,7 +181,7 @@ type Err = FetchErrorType<typeof findPetsByStatus>
 
 ### Utility Methods
 
-- `arrayRequestBody` - Helper to merge params when request body is an array
+- `arrayRequestBody` - Helper to merge params when request body is an array [see issue](https://github.com/ajaishankar/openapi-typescript-fetch/issues/3#issuecomment-952963986)
 
 ```ts
 

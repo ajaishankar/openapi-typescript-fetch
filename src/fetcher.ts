@@ -72,10 +72,10 @@ function getQuery(
   return queryString(queryObj)
 }
 
-function getHeaders(init?: HeadersInit) {
+function getHeaders(body?: string, init?: HeadersInit) {
   const headers = new Headers(init)
 
-  if (!headers.has('Content-Type')) {
+  if (body !== undefined && !headers.has('Content-Type')) {
     headers.append('Content-Type', 'application/json')
   }
 
@@ -120,14 +120,15 @@ function getFetchParams(request: Request) {
 
   const path = getPath(request.path, payload)
   const query = getQuery(request.method, payload, request.queryParams)
-  const headers = getHeaders(request.init?.headers)
+  const body = getBody(request.method, payload)
+  const headers = getHeaders(body, request.init?.headers)
   const url = request.baseUrl + path + query
 
   const init = {
     ...request.init,
     method: request.method.toUpperCase(),
     headers,
-    body: getBody(request.method, payload),
+    body,
   }
 
   return { url, init }
@@ -135,6 +136,9 @@ function getFetchParams(request: Request) {
 
 async function getResponseData(response: Response) {
   const contentType = response.headers.get('content-type')
+  if (response.status === 204 /* no content */) {
+    return undefined
+  }
   if (contentType && contentType.indexOf('application/json') !== -1) {
     return await response.json()
   }
@@ -179,7 +183,6 @@ function wrapMiddlewares(middlewares: Middleware[], fetch: Fetch): Fetch {
       return fetch(url, init)
     }
     const current = middlewares[index]
-    init = init || { headers: getHeaders() }
     return await current(url, init, (nextUrl, nextInit) =>
       handler(index + 1, nextUrl, nextInit),
     )
