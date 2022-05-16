@@ -1,5 +1,5 @@
-import { Fetcher } from './fetcher'
-import { arrayRequestBody } from './utils'
+import { Fetcher } from './fetcher.js'
+import { arrayRequestBody } from './utils.js'
 
 import type {
   ApiResponse,
@@ -14,7 +14,7 @@ import type {
   TypedFetch,
 } from './types'
 
-import { ApiError } from './types'
+import { ApiError } from './types.js'
 
 export type {
   OpArgType,
