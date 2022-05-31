@@ -37,7 +37,7 @@ type OpResponseTypes<OP> = OP extends {
   ? {
       [S in keyof R]: R[S] extends { schema?: infer S } // openapi 2
         ? S
-        : R[S] extends { content: { 'application/json': infer C } } // openapi 3
+        : R[S] extends { content: { [P in keyof R[S] as `application/${string}json`]: infer C; } } // openapi 3
         ? C
         : S extends 'default'
         ? R[S]
