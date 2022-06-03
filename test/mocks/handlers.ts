@@ -49,6 +49,11 @@ const methods = {
   withBodyAndQuery: ['post', 'put', 'patch', 'delete'].map((method) => {
     return (rest as any)[method](`${HOST}/bodyquery/:id`, getResult)
   }),
+  withAccepted: [
+    rest.post(`${HOST}/accepted`, (req, res, ctx) => {
+      return res(ctx.status(202), ctx.json({ message: 'Accepted' }))
+    }),
+  ],
   withError: [
     rest.get(`${HOST}/error/:status`, (req, res, ctx) => {
       const status = Number(req.params.status)
@@ -81,5 +86,6 @@ export const handlers = [
   ...methods.withBody,
   ...methods.withBodyArray,
   ...methods.withBodyAndQuery,
+  ...methods.withAccepted,
   ...methods.withError,
 ]
