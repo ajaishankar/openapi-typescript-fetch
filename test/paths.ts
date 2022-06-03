@@ -61,6 +61,14 @@ export type paths = {
     patch: BodyAndQuery
     delete: BodyAndQuery
   }
+  '/accepted': {
+    post: {
+      parameters: {}
+      responses: {
+        202: { schema: { message: string } }
+      }
+    }
+  }
   '/nocontent': {
     post: {
       parameters: {}
