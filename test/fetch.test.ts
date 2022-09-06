@@ -270,4 +270,38 @@ describe('fetch', () => {
     expect(captured.url).toEqual('https://api.backend.dev/bodyquery/1?scalar=a')
     expect(captured.body).toEqual('{"list":["b","c"]}')
   })
+
+  describe('stringify params', () => {
+    it.only('should use form-style stringifier', async () => {
+      fetcher.configure({
+        baseUrl: 'https://api.backend.dev',
+      })
+
+      const captured = { url: '' }
+
+      fetcher.use(async (url, init, next) => {
+        captured.url = url
+        return next(url, init)
+      })
+
+      const fun = fetcher.path('/query/{a}/{b}').method('get').create()
+
+      await fun({
+        a: 1,
+        b: '/',
+        scalar: 'a',
+        list: ['b', 'c'],
+        object: {
+          nestedObject: {
+            nestedKey: 'd',
+          },
+          nestedList: ['e', 'f'],
+        },
+      })
+
+      expect(captured.url).toBe(
+        'https://api.backend.dev/query/1/%2F?scalar=a&list[0]=b&list[1]=c&object[nestedObject][nestedKey]=d&object[nestedList][0]=e&object[nestedList][1]=f',
+      )
+    })
+  })
 })
