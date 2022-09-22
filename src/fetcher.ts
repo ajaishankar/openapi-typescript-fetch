@@ -140,7 +140,7 @@ async function getResponseData(response: Response) {
     return undefined
   }
   if (contentType && contentType.indexOf('application/json') !== -1) {
-    return await response.json()
+    return response.json()
   }
   const text = await response.text()
   try {
