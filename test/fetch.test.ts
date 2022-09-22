@@ -10,16 +10,17 @@ afterAll(() => server.close())
 
 describe('fetch', () => {
   const fetcher = Fetcher.for<paths>()
+  const defaultFetcherConfig = {
+    baseUrl: 'https://api.backend.dev',
+    init: {
+      headers: {
+        Authorization: 'Bearer token',
+      },
+    },
+  }
 
   beforeEach(() => {
-    fetcher.configure({
-      baseUrl: 'https://api.backend.dev',
-      init: {
-        headers: {
-          Authorization: 'Bearer token',
-        },
-      },
-    })
+    fetcher.configure(defaultFetcherConfig)
   })
 
   const expectedHeaders = {
@@ -269,5 +270,118 @@ describe('fetch', () => {
     expect(data.headers.mw1).toEqual('true')
     expect(captured.url).toEqual('https://api.backend.dev/bodyquery/1?scalar=a')
     expect(captured.body).toEqual('{"list":["b","c"]}')
+  })
+
+  it('GET /blob (with single content type)', async () => {
+    fetcher.configure({ ...defaultFetcherConfig, asBlob: 'application/pdf' })
+
+    const fun = fetcher.path('/blob').method('post').create()
+
+    const { data } = await fun(
+      { value: 'test' },
+      {
+        headers: {
+          Accept: 'application/pdf',
+        },
+      },
+    )
+
+    expect(data).toBeInstanceOf(Blob)
+  })
+
+  it('GET /blob (with single regex)', async () => {
+    fetcher.configure({
+      ...defaultFetcherConfig,
+      asBlob: /^application\/(?!json)/,
+    })
+
+    const fun = fetcher.path('/blob').method('post').create()
+
+    for (const mimeType of ['application/octet-stream', 'application/zip']) {
+      const { data } = await fun(
+        { value: 'test' },
+        {
+          headers: {
+            Accept: mimeType,
+          },
+        },
+      )
+
+      expect(data).toBeInstanceOf(Blob)
+    }
+
+    for (const mimeType of ['text/plain', 'text/plain;charset=utf-8']) {
+      const { data } = await fun(
+        { value: 'test' },
+        {
+          headers: {
+            Accept: mimeType,
+          },
+        },
+      )
+
+      expect(typeof data).toBe('string')
+    }
+
+    for (const mimeType of ['text/plain', 'application/json;charset=utf-8']) {
+      const { data } = await fun(
+        { value: JSON.stringify({ value: 'test' }) },
+        {
+          headers: {
+            Accept: mimeType,
+          },
+        },
+      )
+
+      expect(data).toEqual({ value: 'test' })
+    }
+  })
+
+  it('GET /blob (with list of mime types)', async () => {
+    fetcher.configure({
+      ...defaultFetcherConfig,
+      asBlob: ['application/octet-stream', 'audio/vorbis'],
+    })
+
+    const fun = fetcher.path('/blob').method('post').create()
+
+    for (const mimeType of ['application/octet-stream', 'audio/vorbis']) {
+      const { data } = await fun(
+        { value: 'test' },
+        {
+          headers: {
+            Accept: mimeType,
+          },
+        },
+      )
+
+      expect(data).toBeInstanceOf(Blob)
+    }
+  })
+
+  it('GET /blob (with custom discriminator function', async () => {
+    fetcher.configure({
+      ...defaultFetcherConfig,
+      asBlob: (contentType) => contentType.startsWith('application'),
+    })
+
+    const fun = fetcher.path('/blob').method('post').create()
+
+    for (const mimeType of [
+      'application/octet-stream',
+      'application/zip',
+      'application/json',
+    ]) {
+      const { data } = await fun(
+        { value: 'test' },
+        {
+          headers: {
+            Accept: mimeType,
+          },
+        },
+      )
+
+      expect(data).toBeInstanceOf(Blob)
+    }
   })
 })

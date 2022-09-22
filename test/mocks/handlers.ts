@@ -36,6 +36,13 @@ function getResult(
   )
 }
 
+function getBlob(req: RestRequest, res: ResponseComposition, ctx: RestContext) {
+  return res(
+    ctx.body(new Blob([(req.body as Record<string, string>)['value']])),
+    ctx.set('Content-Type', req.headers.get('accept') ?? 'application/pdf'),
+  )
+}
+
 const HOST = 'https://api.backend.dev'
 
 const methods = {
@@ -49,6 +56,10 @@ const methods = {
   withBodyAndQuery: ['post', 'put', 'patch', 'delete'].map((method) => {
     return (rest as any)[method](`${HOST}/bodyquery/:id`, getResult)
   }),
+  withBlob: [
+    rest.get(`${HOST}/blob`, getBlob),
+    rest.post(`${HOST}/blob`, getBlob),
+  ],
   withError: [
     rest.get(`${HOST}/error/:status`, (req, res, ctx) => {
       const status = Number(req.params.status)
@@ -79,6 +90,7 @@ const methods = {
 export const handlers = [
   ...methods.withQuery,
   ...methods.withBody,
+  ...methods.withBlob,
   ...methods.withBodyArray,
   ...methods.withBodyAndQuery,
   ...methods.withError,

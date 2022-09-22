@@ -127,10 +127,19 @@ export type Middleware = (
   next: Fetch,
 ) => Promise<ApiResponse>
 
+export type BlobTypeSelector = (contentType: string) => boolean
+
+export type ContentTypeDiscriminator =
+  | string
+  | RegExp
+  | Array<string | RegExp>
+  | BlobTypeSelector
+
 export type FetchConfig = {
   baseUrl?: string
   init?: RequestInit
   use?: Middleware[]
+  asBlob?: ContentTypeDiscriminator
 }
 
 export type Request = {

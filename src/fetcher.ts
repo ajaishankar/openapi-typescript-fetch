@@ -13,6 +13,8 @@ import {
   Request,
   _TypedFetch,
   TypedFetch,
+  ContentTypeDiscriminator,
+  BlobTypeSelector,
 } from './types'
 
 const sendBody = (method: Method) =>
@@ -134,13 +136,18 @@ function getFetchParams(request: Request) {
   return { url, init }
 }
 
-async function getResponseData(response: Response) {
+async function getResponseData(response: Response, isBlob: BlobTypeSelector) {
   const contentType = response.headers.get('content-type')
   if (response.status === 204 /* no content */) {
     return undefined
   }
-  if (contentType && contentType.indexOf('application/json') !== -1) {
-    return response.json()
+  if (contentType) {
+    if (isBlob(contentType)) {
+      return response.blob()
+    }
+    if (contentType.includes('application/json')) {
+      return response.json()
+    }
   }
   const text = await response.text()
   try {
@@ -150,25 +157,32 @@ async function getResponseData(response: Response) {
   }
 }
 
-async function fetchJson(url: string, init: RequestInit): Promise<ApiResponse> {
-  const response = await fetch(url, init)
+function getFetchResponse(blobTypeSelector: BlobTypeSelector) {
+  async function fetchResponse(
+    url: string,
+    init: RequestInit,
+  ): Promise<ApiResponse> {
+    const response = await fetch(url, init)
 
-  const data = await getResponseData(response)
+    const data = await getResponseData(response, blobTypeSelector)
 
-  const result = {
-    headers: response.headers,
-    url: response.url,
-    ok: response.ok,
-    status: response.status,
-    statusText: response.statusText,
-    data,
+    const result = {
+      headers: response.headers,
+      url: response.url,
+      ok: response.ok,
+      status: response.status,
+      statusText: response.statusText,
+      data,
+    }
+
+    if (result.ok) {
+      return result
+    }
+
+    throw new ApiError(result)
   }
 
-  if (result.ok) {
-    return result
-  }
-
-  throw new ApiError(result)
+  return fetchResponse
 }
 
 function wrapMiddlewares(middlewares: Middleware[], fetch: Fetch): Fetch {
@@ -227,11 +241,29 @@ function createFetch<OP>(fetch: _TypedFetch<OP>): TypedFetch<OP> {
   return fun
 }
 
+function getBlobTypeSelector(discriminator?: ContentTypeDiscriminator) {
+  if (!discriminator) {
+    return () => false
+  }
+  if (typeof discriminator === 'function') {
+    return discriminator
+  }
+  let arrayDiscriminator = discriminator
+  if (!Array.isArray(discriminator)) {
+    arrayDiscriminator = [discriminator]
+  }
+  const arrayOfRegExp = (arrayDiscriminator as Array<string | RegExp>).map(
+    (expr) => (expr instanceof RegExp ? expr : new RegExp(`^.*${expr}.*$`)),
+  )
+  return (contentType: string) =>
+    Boolean(arrayOfRegExp.find((expr) => expr.test(contentType)))
+}
+
 function fetcher<Paths>() {
   let baseUrl = ''
   let defaultInit: RequestInit = {}
   const middlewares: Middleware[] = []
-  const fetch = wrapMiddlewares(middlewares, fetchJson)
+  let blobTypeSelector: BlobTypeSelector = () => false
 
   return {
     configure: (config: FetchConfig) => {
@@ -239,12 +271,17 @@ function fetcher<Paths>() {
       defaultInit = config.init || {}
       middlewares.splice(0)
       middlewares.push(...(config.use || []))
+      blobTypeSelector = getBlobTypeSelector(config.asBlob)
     },
     use: (mw: Middleware) => middlewares.push(mw),
     path: <P extends keyof Paths>(path: P) => ({
       method: <M extends keyof Paths[P]>(method: M) => ({
-        create: ((queryParams?: Record<string, true | 1>) =>
-          createFetch((payload, init) =>
+        create: ((queryParams?: Record<string, true | 1>) => {
+          const fetch = wrapMiddlewares(
+            middlewares,
+            getFetchResponse(blobTypeSelector),
+          )
+          return createFetch((payload, init) =>
             fetchUrl({
               baseUrl: baseUrl || '',
               path: path as string,
@@ -254,7 +291,8 @@ function fetcher<Paths>() {
               init: mergeRequestInit(defaultInit, init),
               fetch,
             }),
-          )) as CreateFetch<M, Paths[P][M]>,
+          )
+        }) as CreateFetch<M, Paths[P][M]>,
       }),
     }),
   }

@@ -39,6 +39,17 @@ type BodyAndQuery = {
   responses: { 201: { schema: Data } }
 }
 
+type BodyBlob = {
+  parameters: {
+    body: { payload: { value: string } }
+  }
+  responses: {
+    200: {
+      schema: unknown
+    }
+  }
+}
+
 export type paths = {
   '/query/{a}/{b}': {
     get: Query
@@ -60,6 +71,9 @@ export type paths = {
     put: BodyAndQuery
     patch: BodyAndQuery
     delete: BodyAndQuery
+  }
+  '/blob': {
+    post: BodyBlob
   }
   '/nocontent': {
     post: {
