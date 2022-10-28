@@ -13,7 +13,7 @@ export type OpenapiPaths<Paths> = {
   }
 }
 
-type JSONBody <T> =
+type JSONBody<T> =
   | {
       content: {
         'application/json': T
@@ -45,7 +45,9 @@ export type OpArgType<OP> = OP extends {
       | { 'multipart/form-data': infer FD }
   }
 }
-  ? P & Q & (B extends Record<string, unknown> ? B[keyof B] : unknown) & RB
+  ? FD extends Record<string, string>
+    ? FormData
+    : P & Q & (B extends Record<string, unknown> ? B[keyof B] : unknown) & RB
   : Record<string, never>
 
 type OpResponseTypes<OP> = OP extends {
