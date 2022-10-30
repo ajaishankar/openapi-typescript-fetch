@@ -31,7 +31,7 @@ function queryString(params: Record<string, unknown>): string {
     const value = params[key]
     if (value != null) {
       if (Array.isArray(value)) {
-        value.forEach((value) => qs.push(encode(key, value)))
+        value.forEach((value: unknown) => qs.push(encode(key, value)))
       } else {
         qs.push(encode(key, value))
       }
@@ -55,10 +55,10 @@ function getPath(path: string, payload: Record<string, any>) {
 
 function getQuery(
   method: Method,
-  payload: Record<string, any>,
+  payload: Record<string, unknown>,
   query: string[],
 ) {
-  let queryObj = {} as any
+  let queryObj: Record<string, unknown> = {}
 
   if (sendBody(method)) {
     query.forEach((key) => {
@@ -86,7 +86,7 @@ function getHeaders(body?: string, init?: HeadersInit) {
   return headers
 }
 
-function getBody(method: Method, payload: any) {
+function getBody(method: Method, payload: unknown) {
   const body = sendBody(method) ? JSON.stringify(payload) : undefined
   // if delete don't send body if empty
   return method === 'delete' && body === '{}' ? undefined : body
@@ -108,7 +108,10 @@ function mergeRequestInit(
   return { ...first, ...second, headers }
 }
 
-function getFetchParams(request: Request) {
+function getFetchParams(request: Request): {
+  url: string
+  init: CustomRequestInit
+} {
   // clone payload
   // if body is a top level array [ 'a', 'b', param: value ] with param values
   // using spread [ ...payload ] returns [ 'a', 'b' ] and skips custom keys
@@ -124,17 +127,17 @@ function getFetchParams(request: Request) {
   const headers = getHeaders(body, request.init?.headers)
   const url = request.baseUrl + path + query
 
-  const init = {
+  const init: CustomRequestInit = {
     ...request.init,
     method: request.method.toUpperCase(),
     headers,
-    body,
+    body: body === undefined ? null : body,
   }
 
   return { url, init }
 }
 
-async function getResponseData(response: Response) {
+async function getResponseData(response: Response): Promise<unknown> {
   const contentType = response.headers.get('content-type')
   if (response.status === 204 /* no content */) {
     return undefined
@@ -183,6 +186,9 @@ function wrapMiddlewares(middlewares: Middleware[], fetch: Fetch): Fetch {
       return fetch(url, init)
     }
     const current = middlewares[index]
+    if (!current) {
+      throw new Error('Unexpected falsy middleware')
+    }
     return await current(url, init, (nextUrl, nextInit) =>
       handler(index + 1, nextUrl, nextInit),
     )
@@ -227,7 +233,7 @@ function createFetch<OP>(fetch: _TypedFetch<OP>): TypedFetch<OP> {
   return fun
 }
 
-function fetcher<Paths>() {
+function fetcher<Paths extends OpenapiPaths<Paths>>() {
   let baseUrl = ''
   let defaultInit: RequestInit = {}
   const middlewares: Middleware[] = []

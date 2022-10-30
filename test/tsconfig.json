@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "module": "ES2020",
+    "noEmit": true
+  },
+  "extends": "../tsconfig.base.json",
+  "include": [
+    "*"
+  ]
+}

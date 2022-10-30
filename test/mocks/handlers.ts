@@ -51,7 +51,7 @@ const methods = {
   }),
   withError: [
     rest.get(`${HOST}/error/:status`, (req, res, ctx) => {
-      const status = Number(req.params.status)
+      const status = Number(req.params['status'])
       const detail = req.url.searchParams.get('detail') === 'true'
       return detail
         ? res(
@@ -64,13 +64,13 @@ const methods = {
           )
         : res(ctx.status(status))
     }),
-    rest.post(`${HOST}/nocontent`, (req, res, ctx) => {
+    rest.post(`${HOST}/nocontent`, (_req, res, ctx) => {
       return res(ctx.status(204))
     }),
-    rest.get(`${HOST}/defaulterror`, (req, res, ctx) => {
+    rest.get(`${HOST}/defaulterror`, (_req, res, ctx) => {
       return res(ctx.status(500), ctx.body('internal server error'))
     }),
-    rest.get(`${HOST}/networkerror`, (req, res) => {
+    rest.get(`${HOST}/networkerror`, (_req, res) => {
       return res.networkError('failed to connect')
     }),
   ],
