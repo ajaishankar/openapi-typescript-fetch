@@ -68,6 +68,7 @@
     "clean": "rimraf './dist'",
     "lint:eslint": "eslint .",
     "lint:type-coverage": "type-coverage --strict --at-least 95 --ignore-files='test/**' --ignore-files='dist/**'",
+    "lint:typecheck-tests": "tsc --noEmit --project test/tsconfig.json",
     "lint:typecheck": "tsc --noEmit --project tsconfig.json",
     "lint": "run-p lint:*",
     "prepare": "npm run build",

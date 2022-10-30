@@ -266,7 +266,7 @@ describe('fetch', () => {
     })
 
     expect(data.body.list).toEqual(['b', 'c', 'mw2', 'mw1'])
-    expect(data.headers.mw1).toEqual('true')
+    expect(data.headers['mw1']).toEqual('true')
     expect(captured.url).toEqual('https://api.backend.dev/bodyquery/1?scalar=a')
     expect(captured.body).toEqual('{"list":["b","c"]}')
   })
