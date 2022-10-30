@@ -108,7 +108,10 @@ function mergeRequestInit(
   return { ...first, ...second, headers }
 }
 
-function getFetchParams(request: Request) {
+function getFetchParams(request: Request): {
+  url: string
+  init: CustomRequestInit
+} {
   // clone payload
   // if body is a top level array [ 'a', 'b', param: value ] with param values
   // using spread [ ...payload ] returns [ 'a', 'b' ] and skips custom keys
@@ -124,11 +127,11 @@ function getFetchParams(request: Request) {
   const headers = getHeaders(body, request.init?.headers)
   const url = request.baseUrl + path + query
 
-  const init = {
+  const init: CustomRequestInit = {
     ...request.init,
     method: request.method.toUpperCase(),
     headers,
-    body,
+    body: body === undefined ? null : body,
   }
 
   return { url, init }
@@ -183,6 +186,9 @@ function wrapMiddlewares(middlewares: Middleware[], fetch: Fetch): Fetch {
       return fetch(url, init)
     }
     const current = middlewares[index]
+    if (!current) {
+      throw new Error('Unexpected falsy middleware')
+    }
     return await current(url, init, (nextUrl, nextInit) =>
       handler(index + 1, nextUrl, nextInit),
     )
