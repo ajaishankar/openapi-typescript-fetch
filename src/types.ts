@@ -76,7 +76,7 @@ type Coalesce<T, D> = [T] extends [never] ? D : T
 // coalesce default error type
 export type OpErrorType<OP> = Coalesce<
   _OpErrorType<OpResponseTypes<OP>>,
-  { status: number; data: any }
+  { status: number; data: unknown }
 >
 
 export type CustomRequestInit = Omit<RequestInit, 'headers'> & {
@@ -138,7 +138,7 @@ export type Request = {
   method: Method
   path: string
   queryParams: string[] // even if a post these will be sent in query
-  payload: any
+  payload: unknown
   init?: RequestInit
   fetch: Fetch
 }
@@ -157,7 +157,7 @@ export class ApiError extends Error {
   readonly url: string
   readonly status: number
   readonly statusText: string
-  readonly data: any
+  readonly data: unknown
 
   constructor(response: Omit<ApiResponse, 'ok'>) {
     super(response.statusText)

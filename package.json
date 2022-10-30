@@ -46,10 +46,12 @@
     "eslint-plugin-prettier": "^4.0.0",
     "jest": "^27.2.5",
     "msw": "^0.35.0",
+    "npm-run-all2": "^6.0.2",
     "prettier": "^2.4.0",
     "rimraf": "^3.0.0",
     "ts-jest": "^27.0.0",
     "ts-node": "^10.0.0",
+    "type-coverage": "^2.22.0",
     "typescript": "~4.6.0",
     "whatwg-fetch": "^3.6.2"
   },
@@ -59,13 +61,18 @@
     "semi": false
   },
   "scripts": {
+    "build:0-clean": "run-s clean",
+    "build:1-esm": "tsc --project tsconfig.json",
+    "build:2-cjs": "tsc --project tsconfig.cjs.json",
+    "build": "run-s build:*",
     "clean": "rimraf './dist'",
-    "build": "npm run clean && tsc --project tsconfig.json && tsc --project tsconfig.cjs.json",
-    "lint": "eslint .",
+    "lint:eslint": "eslint .",
+    "lint:type-coverage": "type-coverage --strict --at-least 95 --ignore-files='test/**' --ignore-files='dist/**'",
+    "lint:typecheck": "tsc --noEmit --project tsconfig.json",
+    "lint": "run-p lint:*",
     "prepare": "npm run build",
-    "test": "npm run build && jest",
-    "test:coverage": "npm run build && jest --no-cache --coverage && codecov",
     "test:coverage:local": "npm run build && jest --no-cache --collectCoverage",
-    "typecheck": "tsc --noEmit --project tsconfig.json"
+    "test:coverage": "npm run build && jest --no-cache --coverage && codecov",
+    "test": "npm run build && jest"
   }
 }
