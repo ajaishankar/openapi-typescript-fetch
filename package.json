@@ -4,7 +4,7 @@
   "publishConfig": {
     "registry": "https://artifactory.plex.bz/artifactory/api/npm/npm-stable/"
   },
-  "version": "1.2.0",
+  "version": "1.3.0",
   "engines": {
     "node": ">= 12.0.0",
     "npm": ">= 7.0.0"
