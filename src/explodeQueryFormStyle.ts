@@ -10,11 +10,7 @@ export default function explodeQueryFormStyle(
   if (Array.isArray(params)) {
     return acc.concat(
       params.flatMap((param, i) =>
-        explodeQueryFormStyle(
-          acc,
-          typeof param === 'object' ? `${prefix}[${i}]` : prefix,
-          param,
-        ),
+        explodeQueryFormStyle(acc, prefix ? `${prefix}[${i}]` : '', param),
       ),
     )
   }

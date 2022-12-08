@@ -272,7 +272,7 @@ describe('fetch', () => {
   })
 
   describe('stringify params', () => {
-    it('should use form-style stringifier', async () => {
+    it.only('should use form-style stringifier', async () => {
       fetcher.configure({
         baseUrl: 'https://api.backend.dev',
       })
@@ -300,7 +300,7 @@ describe('fetch', () => {
       })
 
       expect(captured.url).toBe(
-        'https://api.backend.dev/query/1/%2F?scalar=a&list=b&list=c&object[nestedObject][nestedKey]=d&object[nestedList]=e&object[nestedList]=f',
+        'https://api.backend.dev/query/1/%2F?scalar=a&list[0]=b&list[1]=c&object[nestedObject][nestedKey]=d&object[nestedList][0]=e&object[nestedList][1]=f',
       )
     })
   })

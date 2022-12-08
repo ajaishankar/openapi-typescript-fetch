@@ -40,7 +40,7 @@ describe('explodeQueryFormStyle', () => {
       {
         options: ['staySignedIn', 'darkMode'],
       },
-      ['options=staySignedIn', 'options=darkMode'],
+      ['options[0]=staySignedIn', 'options[1]=darkMode'],
     ],
     [
       {
@@ -48,7 +48,7 @@ describe('explodeQueryFormStyle', () => {
           options: ['staySignedIn', 'darkMode'],
         },
       },
-      ['user1[options]=staySignedIn', 'user1[options]=darkMode'],
+      ['user1[options][0]=staySignedIn', 'user1[options][1]=darkMode'],
     ],
     [
       ['isFirstView', 'isRedirect'],
@@ -69,12 +69,12 @@ describe('explodeQueryFormStyle', () => {
         ],
       },
       [
-        'parts[0]=red',
-        'parts[0]=200',
-        'parts[1]=green',
-        'parts[1]=25',
-        'parts[2]=blue',
-        'parts[2]=170',
+        'parts[0][0]=red',
+        'parts[0][1]=200',
+        'parts[1][0]=green',
+        'parts[1][1]=25',
+        'parts[2][0]=blue',
+        'parts[2][1]=170',
       ],
     ],
   ])('should explode %p to %p', (input, expectedOutput) => {
