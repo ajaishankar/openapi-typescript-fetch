@@ -1,5 +1,5 @@
 {
-  "name": "@plexinc/openapi-typescript-fetch",
+  "name": "@plex/openapi-typescript-fetch",
   "description": "A typed fetch client for openapi-typescript",
   "publishConfig": {
     "registry": "https://artifactory.plex.bz/artifactory/api/npm/npm-stable/"
