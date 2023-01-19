@@ -9,6 +9,7 @@ import {
   OpReturnType,
   TypedFetch,
 } from '../src'
+import { paths } from './paths'
 import { paths as paths2 } from './examples/stripe-openapi2'
 import { paths as paths3 } from './examples/stripe-openapi3'
 
@@ -40,6 +41,23 @@ interface Openapi3 {
 type Same<A, B> = A extends B ? (B extends A ? true : false) : false
 
 describe('infer', () => {
+  it('queryParams', () => {
+    const fetcher = Fetcher.for<paths>()
+
+    fetcher
+      .path('/bodyquery/{id}')
+      .method('post')
+      // @ts-expect-error // Missing the optional param is wrong
+      .create({ scalar: 1 })
+
+    fetcher
+      .path('/bodyquery/{id}')
+      .method('post')
+      .create({ scalar: 1, optional: 1 })
+
+    expect(true).toBe(true)
+  })
+
   it('argument', () => {
     const same: Same<Openapi2['Argument'], Openapi3['Argument']> = true
     expect(same).toBe(true)
