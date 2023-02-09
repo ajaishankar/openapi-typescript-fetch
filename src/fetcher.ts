@@ -72,8 +72,12 @@ function getQuery(
   return queryString(queryObj)
 }
 
-function getHeaders(body?: string, init?: HeadersInit) {
-  const headers = new Headers(init)
+function getHeaders(
+  _headers: typeof Headers,
+  body?: string,
+  init?: HeadersInit,
+) {
+  const headers = new _headers(init)
 
   if (body !== undefined && !headers.has('Content-Type')) {
     headers.append('Content-Type', 'application/json')
@@ -93,11 +97,12 @@ function getBody(method: Method, payload: any) {
 }
 
 function mergeRequestInit(
+  _headers: typeof Headers,
   first?: RequestInit,
   second?: RequestInit,
 ): RequestInit {
-  const headers = new Headers(first?.headers)
-  const other = new Headers(second?.headers)
+  const headers = new _headers(first?.headers)
+  const other = new _headers(second?.headers)
 
   for (const key of other.keys()) {
     const value = other.get(key)
@@ -108,7 +113,7 @@ function mergeRequestInit(
   return { ...first, ...second, headers }
 }
 
-function getFetchParams(request: Request) {
+function getFetchParams(request: Request, _headers: typeof Headers) {
   // clone payload
   // if body is a top level array [ 'a', 'b', param: value ] with param values
   // using spread [ ...payload ] returns [ 'a', 'b' ] and skips custom keys
@@ -121,7 +126,7 @@ function getFetchParams(request: Request) {
   const path = getPath(request.path, payload)
   const query = getQuery(request.method, payload, request.queryParams)
   const body = getBody(request.method, payload)
-  const headers = getHeaders(body, request.init?.headers)
+  const headers = getHeaders(_headers, body, request.init?.headers)
   const url = request.baseUrl + path + query
 
   const init = {
@@ -150,8 +155,12 @@ async function getResponseData(response: Response) {
   }
 }
 
-async function fetchJson(url: string, init: RequestInit): Promise<ApiResponse> {
-  const response = await fetch(url, init)
+async function fetchJson(
+  url: string,
+  init: RequestInit,
+  _fetch: typeof fetch,
+): Promise<ApiResponse> {
+  const response = await _fetch(url, init)
 
   const data = await getResponseData(response)
 
@@ -191,8 +200,8 @@ function wrapMiddlewares(middlewares: Middleware[], fetch: Fetch): Fetch {
   return (url, init) => handler(0, url, init)
 }
 
-async function fetchUrl<R>(request: Request) {
-  const { url, init } = getFetchParams(request)
+async function fetchUrl<R>(request: Request, _headers: typeof Headers) {
+  const { url, init } = getFetchParams(request, _headers)
 
   const response = await request.fetch(url, init)
 
@@ -230,8 +239,12 @@ function createFetch<OP>(fetch: _TypedFetch<OP>): TypedFetch<OP> {
 function fetcher<Paths>() {
   let baseUrl = ''
   let defaultInit: RequestInit = {}
+  let _fetch = globalThis.fetch
+  let _headers = globalThis.Headers
   const middlewares: Middleware[] = []
-  const fetch = wrapMiddlewares(middlewares, fetchJson)
+  const fetch = wrapMiddlewares(middlewares, (url: string, init: RequestInit) =>
+    fetchJson(url, init, _fetch),
+  )
 
   return {
     configure: (config: FetchConfig) => {
@@ -239,21 +252,28 @@ function fetcher<Paths>() {
       defaultInit = config.init || {}
       middlewares.splice(0)
       middlewares.push(...(config.use || []))
+      if (config.fetchProvider) {
+        _fetch = config.fetchProvider.fetch || globalThis.fetch
+        _headers = config.fetchProvider.Headers || globalThis.Headers
+      }
     },
     use: (mw: Middleware) => middlewares.push(mw),
     path: <P extends keyof Paths>(path: P) => ({
       method: <M extends keyof Paths[P]>(method: M) => ({
         create: ((queryParams?: Record<string, true | 1>) =>
           createFetch((payload, init) =>
-            fetchUrl({
-              baseUrl: baseUrl || '',
-              path: path as string,
-              method: method as Method,
-              queryParams: Object.keys(queryParams || {}),
-              payload,
-              init: mergeRequestInit(defaultInit, init),
-              fetch,
-            }),
+            fetchUrl(
+              {
+                baseUrl: baseUrl || '',
+                path: path as string,
+                method: method as Method,
+                queryParams: Object.keys(queryParams || {}),
+                payload,
+                init: mergeRequestInit(_headers, defaultInit, init),
+                fetch,
+              },
+              _headers,
+            ),
           )) as CreateFetch<M, Paths[P][M]>,
       }),
     }),

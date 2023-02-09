@@ -131,6 +131,10 @@ export type FetchConfig = {
   baseUrl?: string
   init?: RequestInit
   use?: Middleware[]
+  fetchProvider?: {
+    fetch: typeof globalThis.fetch
+    Headers: typeof globalThis.Headers
+  }
 }
 
 export type Request = {
