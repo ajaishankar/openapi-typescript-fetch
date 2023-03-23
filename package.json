@@ -2,7 +2,6 @@
   "name": "@cuppachino/openapi-fetch",
   "description": "An updated fork of ajaishankar's openapi-typescript-fetch",
   "version": "2.0.2",
-  "private": "false",
   "publishConfig": {
     "access": "public"
   },
