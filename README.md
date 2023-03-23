@@ -4,28 +4,30 @@
 
 A typed fetch client for [openapi-typescript](https://github.com/drwpow/openapi-typescript)
 
-### Install
+## Installation
 
-```bash
-npm install @cuppachino/openapi-fetch
+```ps1
+pnpm add @cuppachino/openapi-fetch
 ```
 
-Or
+```ps1
+npm i @cuppachino/openapi-fetch
+```
 
-```bash
+```ps1
 yarn add @cuppachino/openapi-fetch
 ```
 
-**Features**
+### Features
 
 Supports JSON request and responses
 
-- ✅ [OpenAPI 3.0](https://swagger.io/specification)
-- ✅ [Swagger 2.0](https://swagger.io/specification/v2/)
+*   ✅ [OpenAPI 3.0](https://swagger.io/specification)
+*   ✅ [Swagger 2.0](https://swagger.io/specification/v2/)
 
-### Usage
+## Usage
 
-**Generate typescript definition from schema**
+### Generate typescript definition from schema
 
 ```bash
 npx openapi-typescript https://petstore.swagger.io/v2/swagger.json --output petstore.ts
@@ -34,7 +36,7 @@ npx openapi-typescript https://petstore.swagger.io/v2/swagger.json --output pets
 # 🚀 https://petstore.swagger.io/v2/swagger.json -> petstore.ts [650ms]
 ```
 
-**Typed fetch client**
+### Typed fetch client
 
 ```ts
 import 'whatwg-fetch'
@@ -153,13 +155,13 @@ import './fetch-polyfill'
 
 ### Utility Types
 
-- `OpArgType` - Infer argument type of an operation
-- `OpReturnType` - Infer return type of an operation
-- `OpErrorType` - Infer error type of an operation
-- `FetchArgType` - Argument type of a typed fetch operation
-- `FetchReturnType` - Return type of a typed fetch operation
-- `FetchErrorType` - Error type of a typed fetch operation
-- `TypedFetch` - Fetch operation type
+*   `OpArgType` - Infer argument type of an operation
+*   `OpReturnType` - Infer return type of an operation
+*   `OpErrorType` - Infer error type of an operation
+*   `FetchArgType` - Argument type of a typed fetch operation
+*   `FetchReturnType` - Return type of a typed fetch operation
+*   `FetchErrorType` - Error type of a typed fetch operation
+*   `TypedFetch` - Fetch operation type
 
 ```ts
 import { paths, operations } from './petstore'
@@ -183,7 +185,7 @@ type Err = FetchErrorType<typeof findPetsByStatus>
 
 ### Utility Methods
 
-- `arrayRequestBody` - Helper to merge params when request body is an array [see issue](https://github.com/ajaishankar/openapi-typescript-fetch/issues/3#issuecomment-952963986)
+*   `arrayRequestBody` - Helper to merge params when request body is an array [see issue](https://github.com/ajaishankar/openapi-typescript-fetch/issues/3#issuecomment-952963986)
 
 ```ts
 
