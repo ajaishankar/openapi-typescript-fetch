@@ -57,6 +57,13 @@
     "jest-environment-jsdom": "^29.5.0",
     "msw": "^0.35.0",
     "prettier": "^2.8.6",
+    "remark": "^14.0.2",
+    "remark-cli": "^11.0.0",
+    "remark-lint-emphasis-marker": "^3.1.1",
+    "remark-lint-list-item-indent": "^3.1.1",
+    "remark-lint-strong-marker": "^3.1.1",
+    "remark-preset-lint-consistent": "^5.1.1",
+    "remark-preset-lint-recommended": "^6.1.2",
     "rimraf": "^3.0.2",
     "ts-jest": "^29.0.5",
     "ts-node": "^10.9.1",
@@ -68,10 +75,28 @@
     "singleQuote": true,
     "semi": false
   },
+  "remarkConfig": {
+    "settings": {
+      "emphasis": "*",
+      "strong": "*"
+    },
+    "plugins": [
+      "remark-preset-lint-consistent",
+      "remark-preset-lint-recommended",
+      [
+        "remark-lint-emphasis-marker",
+        "*"
+      ],
+      [
+        "remark-lint-strong-marker",
+        "*"
+      ]
+    ]
+  },
   "scripts": {
     "clean": "rimraf ./dist",
     "build": "npm run clean && tsc --project tsconfig.json && tsc --project tsconfig.cjs.json && node ./scripts/os.js",
-    "lint": "eslint .",
+    "lint": "eslint . --fix && remark . --quiet --frail --output",
     "test": "tsc --noEmit --project tsconfig.json && jest",
     "version-package": "changeset version && pnpm lint",
     "release": "pnpm build && pnpm test && changeset publish",

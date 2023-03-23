@@ -4,4 +4,4 @@
 
 ### Patch Changes
 
-- f0cab17: change package name
+*   f0cab17: change package name
