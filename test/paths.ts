@@ -9,7 +9,7 @@ export type Data = {
 type Query = {
   parameters: {
     path: { a: number; b: string }
-    query: { scalar: string; list: string[] }
+    query: { scalar: string; list: string[]; optional?: string }
   }
   responses: { 200: { schema: Data } }
 }
@@ -33,7 +33,7 @@ type BodyArray = {
 type BodyAndQuery = {
   parameters: {
     path: { id: number }
-    query: { scalar: string }
+    query: { scalar: string; optional?: string }
     body: { payload: { list: string[] } }
   }
   responses: { 201: { schema: Data } }
