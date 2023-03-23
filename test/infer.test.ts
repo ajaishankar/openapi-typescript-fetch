@@ -1,6 +1,6 @@
-import {
+import { Fetcher } from '../src'
+import type {
   FetchArgType,
-  Fetcher,
   FetchErrorType,
   FetchReturnType,
   OpArgType,
@@ -9,8 +9,8 @@ import {
   OpReturnType,
   TypedFetch,
 } from '../src'
-import { paths as paths2 } from './examples/stripe-openapi2'
-import { paths as paths3 } from './examples/stripe-openapi3'
+import type { paths as paths2 } from './examples/stripe-openapi2'
+import type { paths as paths3 } from './examples/stripe-openapi3'
 
 type Op2 = paths2['/v1/account_links']['post']
 

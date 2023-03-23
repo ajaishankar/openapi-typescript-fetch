@@ -1,8 +1,8 @@
 import 'whatwg-fetch'
 
 import { server } from './mocks/server'
-import { ApiError, arrayRequestBody, Fetcher } from '../src'
-import { Data, paths } from './paths'
+import { ApiError, Fetcher, arrayRequestBody } from '../src'
+import type { Data, paths } from './paths'
 
 beforeAll(() => server.listen())
 afterEach(() => server.resetHandlers())

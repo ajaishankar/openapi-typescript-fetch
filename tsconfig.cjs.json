@@ -1,6 +1,8 @@
 {
     "compilerOptions": {
+      "target": "ES2015",
       "module": "CommonJS",
+      "moduleResolution": "nodenext",
       "outDir": "./dist/cjs"
     },
     "extends": "./tsconfig.base.json"
