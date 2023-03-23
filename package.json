@@ -1,5 +1,5 @@
 {
-  "name": "@cuppachino/openapi-into-fetch",
+  "name": "@cuppachino/openapi-fetch",
   "description": "An updated fork of ajaishankar's openapi-typescript-fetch",
   "version": "2.0.0",
   "private": "false",

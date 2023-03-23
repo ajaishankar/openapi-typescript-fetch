@@ -1,18 +1,19 @@
-[![version(scoped)](https://img.shields.io/npm/v/openapi-typescript-fetch.svg)](https://www.npmjs.com/package/openapi-typescript-fetch)
-[![codecov](https://codecov.io/gh/ajaishankar/openapi-typescript-fetch/branch/main/graph/badge.svg?token=Z8GQ6M5KAR)](https://codecov.io/gh/ajaishankar/openapi-typescript-fetch)
+# 📘️ @cuppachino/openapi-fetch
 
-# 📘️ openapi-typescript-fetch
+[![version(scoped)](https://img.shields.io/npm/v/@cuppachino/openapi-fetch.svg)](https://www.npmjs.com/package/@cuppachino/openapi-fetch)
 
-A typed fetch client for [openapi-typescript](https://github.com/drwpow/openapi-typescript) 
+A typed fetch client for [openapi-typescript](https://github.com/drwpow/openapi-typescript)
 
 ### Install
 
 ```bash
-npm install openapi-typescript-fetch
+npm install @cuppachino/openapi-fetch
 ```
+
 Or
+
 ```bash
-yarn add openapi-typescript-fetch
+yarn add @cuppachino/openapi-fetch
 ```
 
 **Features**
@@ -38,7 +39,7 @@ npx openapi-typescript https://petstore.swagger.io/v2/swagger.json --output pets
 ```ts
 import 'whatwg-fetch'
 
-import { Fetcher } from 'openapi-typescript-fetch'
+import { Fetcher } from '@cuppachino/openapi-fetch'
 
 import { paths } from './petstore'
 
@@ -105,7 +106,7 @@ Middlewares can be used to pre and post process fetch operations (log api calls,
 
 ```ts
 
-import { Middleware } from 'openapi-typescript-fetch'
+import { Middleware } from '@cuppachino/openapi-fetch'
 
 const logger: Middleware = async (url, init, next) => {
   console.log(`fetching ${url}`)
@@ -130,6 +131,7 @@ fetcher.use(logger)
 This library can be used server side with [node-fetch](https://www.npmjs.com/package/node-fetch)
 
 Node CommonJS setup
+
 ```ts
 // install node-fetch v2
 npm install node-fetch@2
