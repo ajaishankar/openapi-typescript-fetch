@@ -27,7 +27,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/ajaishankar/openapi-typescript-fetch"
+    "url": "https://github.com/https://github.com/cuppachino/openapi-typescript-fetch"
   },
   "keywords": [
     "fetch",
@@ -40,9 +40,9 @@
     "node"
   ],
   "bugs": {
-    "url": "https://github.com/ajaishankar/openapi-typescript-fetch/issues"
+    "url": "https://github.com/https://github.com/cuppachino/openapi-typescript-fetch/issues"
   },
-  "homepage": "https://github.com/ajaishankar/openapi-typescript-fetch#readme",
+  "homepage": "https://github.com/https://github.com/cuppachino/openapi-typescript-fetch#readme",
   "devDependencies": {
     "@changesets/cli": "^2.26.1",
     "@types/jest": "^29.5.0",
