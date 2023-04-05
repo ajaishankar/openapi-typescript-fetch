@@ -13,7 +13,7 @@ import {
   Request,
   _TypedFetch,
   TypedFetch,
-} from './types'
+} from './types.js'
 
 const sendBody = (method: Method) =>
   method === 'post' ||

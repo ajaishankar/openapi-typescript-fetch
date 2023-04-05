@@ -1,0 +1,15 @@
+{
+  "preset": "ts-jest/presets/default-esm",
+  "testEnvironment": "jsdom",
+  "modulePathIgnorePatterns": ["dist"],
+  "moduleNameMapper": {
+    "^(\\.{1,2}/.*)\\.js$": "$1"
+  },
+  "globals": {
+    "ts-jest": {
+      "tsconfig": {
+        "sourceMap": true
+      }
+    }
+  }
+}

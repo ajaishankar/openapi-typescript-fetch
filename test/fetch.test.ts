@@ -42,7 +42,7 @@ describe('fetch', () => {
       list: ['b', 'c'],
     })
 
-    expect(data.params).toEqual({ a: '1', b: '%2F' })
+    expect(data.params).toEqual({ a: '1', b: '/' })
     expect(data.query).toEqual({ scalar: 'a', list: ['b', 'c'] })
     expect(data.headers).toEqual(expectedHeaders)
     expect(ok).toBe(true)

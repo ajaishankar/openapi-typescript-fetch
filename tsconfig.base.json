@@ -1,17 +1,18 @@
 {
     "compilerOptions": {
-      "baseUrl": "./src",
-      "declaration": true,
-      "esModuleInterop": true,
-      "forceConsistentCasingInFileNames": true,
-      "lib": ["dom", "dom.iterable", "ES2018"],
-      "moduleResolution": "Node",
-      "noImplicitReturns": true,
-      "removeComments": true,
-      "sourceMap": false,
-      "strict": true,
-      "target": "ES2015",
-      "useDefineForClassFields": true
+        "baseUrl": "./src",
+        "declaration": true,
+        "declarationDir": "dist",
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "lib": ["dom", "dom.iterable", "es2019"],
+        "moduleResolution": "nodenext",
+        "noImplicitReturns": true,
+        "removeComments": true,
+        "sourceMap": false,
+        "strict": true,
+        "target": "es2019",
+        "skipLibCheck": true
     },
     "include": ["src"]
-  }
+}
