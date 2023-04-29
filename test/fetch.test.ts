@@ -24,8 +24,12 @@ describe('fetch', () => {
 
   const expectedHeaders = {
     authorization: 'Bearer token',
-    'content-type': 'application/json',
     accept: 'application/json',
+  }
+
+  const headersWithContentType = {
+    ...expectedHeaders,
+    'content-type': 'application/json',
   }
 
   it('GET /query/{a}/{b}', async () => {
@@ -60,7 +64,7 @@ describe('fetch', () => {
       expect(data.params).toEqual({ id: '1' })
       expect(data.body).toEqual({ list: ['b', 'c'] })
       expect(data.query).toEqual({})
-      expect(data.headers).toEqual(expectedHeaders)
+      expect(data.headers).toEqual(headersWithContentType)
     })
   })
 
@@ -73,7 +77,7 @@ describe('fetch', () => {
       expect(data.params).toEqual({ id: '1' })
       expect(data.body).toEqual(['b', 'c'])
       expect(data.query).toEqual({})
-      expect(data.headers).toEqual(expectedHeaders)
+      expect(data.headers).toEqual(headersWithContentType)
     })
   })
 
@@ -93,8 +97,25 @@ describe('fetch', () => {
       expect(data.params).toEqual({ id: '1' })
       expect(data.body).toEqual({ list: ['b', 'c'] })
       expect(data.query).toEqual({ scalar: 'a' })
-      expect(data.headers).toEqual(expectedHeaders)
+      expect(data.headers).toEqual(headersWithContentType)
     })
+  })
+
+  it(`DELETE /body/{id} (empty body)`, async () => {
+    const fun = fetcher.path('/body/{id}').method('delete').create()
+
+    const { data } = await fun({ id: 1 } as any)
+
+    expect(data.params).toEqual({ id: '1' })
+    expect(data.headers).toHaveProperty('accept')
+    expect(data.headers).not.toHaveProperty('content-type')
+  })
+
+  it(`POST /nocontent`, async () => {
+    const fun = fetcher.path('/nocontent').method('post').create()
+    const { status, data } = await fun(undefined)
+    expect(status).toBe(204)
+    expect(data).toBeUndefined()
   })
 
   it('GET /error', async () => {
