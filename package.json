@@ -1,17 +1,38 @@
 {
-  "name": "openapi-typescript-fetch",
+  "name": "@qdrant/openapi-typescript-fetch",
   "description": "A typed fetch client for openapi-typescript",
   "version": "1.1.3",
   "engines": {
-    "node": ">= 12.0.0",
-    "npm": ">= 6.0.0"
+    "node": ">=12.0.0",
+    "pnpm": ">=8"
   },
+  "packageManager": "pnpm@8.5.0",
   "author": "Ajai Shankar",
   "contributors": [
     {
       "name": "Luis Merino",
       "email": "mail@luismerino.name",
       "url": "https://github.com/Rendez"
+    },
+    {
+      "name": "Caleb Mackey",
+      "email": "caleb.mackey@gmail.com"
+    },
+    {
+      "name": "Don Denton",
+      "email": "don@happycollision.com"
+    },
+    {
+      "name": "Pelle Wessman",
+      "email": "pelle@kodfabrik.se"
+    },
+    {
+      "name": "Oka Gentaro",
+      "email": "oka@ctime.jp"
+    },
+    {
+      "name": "javiertury",
+      "email": "javiertury@gmail.com"
     }
   ],
   "license": "MIT",
@@ -31,9 +52,12 @@
   "files": [
     "dist"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/ajaishankar/openapi-typescript-fetch"
+    "url": "https://github.com/qdrant/openapi-typescript-fetch"
   },
   "keywords": [
     "fetch",
@@ -46,10 +70,12 @@
     "node"
   ],
   "bugs": {
-    "url": "https://github.com/ajaishankar/openapi-typescript-fetch/issues"
+    "url": "https://github.com/qdrant/openapi-typescript-fetch/issues"
   },
-  "homepage": "https://github.com/ajaishankar/openapi-typescript-fetch#readme",
+  "homepage": "https://github.com/qdrant/openapi-typescript-fetch#readme",
   "devDependencies": {
+    "@changesets/changelog-github": "0.4.8",
+    "@changesets/cli": "2.26.1",
     "@types/jest": "^28.0.0",
     "@typescript-eslint/eslint-plugin": "^4.30.0",
     "@typescript-eslint/parser": "^4.31.0",
@@ -74,12 +100,14 @@
   },
   "scripts": {
     "clean": "rimraf './dist'",
-    "build": "npm run clean && tsc -p tsconfig.json && tsc -p tsconfig.es6.json && tsc -p tsconfig.cjs.json && node post-build.js",
+    "build": "pnpm clean && tsc -p tsconfig.json && tsc -p tsconfig.es6.json && tsc -p tsconfig.cjs.json && node post-build.js",
     "lint": "eslint .",
-    "prepare": "npm run build",
-    "test": "npm run build && jest",
-    "test:coverage": "npm run build && jest --no-cache --coverage && codecov",
-    "test:coverage:local": "npm run build && jest --no-cache --collectCoverage",
-    "typecheck": "tsc --noEmit --project tsconfig.json"
+    "prepare": "pnpm build",
+    "test": "pnpm build && jest",
+    "test:coverage": "pnpm build && jest --no-cache --coverage && codecov",
+    "test:coverage:local": "pnpm build && jest --no-cache --collectCoverage",
+    "tsc:check": "tsc --noEmit",
+    "ci:version": "pnpm changeset version && pnpm install --no-frozen-lockfile && git add .",
+    "ci:release": "pnpm changeset publish"
   }
 }

@@ -1,0 +1,43 @@
+name: Pull request
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  precheck:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18, 16, 14, 12]
+        os:
+          - ubuntu-latest
+          - windows-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v2
+        with:
+          run_install: false
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      - name: Node packages audit
+        run: pnpm audit
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        env:
+          CI: 1
+
+      - name: Run checks
+        run: |
+          pnpm test
+          pnpm lint
+          pnpm tsc:check
