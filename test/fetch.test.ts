@@ -24,12 +24,12 @@ describe('fetch', () => {
 
   const expectedHeaders = {
     authorization: 'Bearer token',
-    accept: 'application/json',
   }
 
-  const headersWithContentType = {
+  const expectedHeadersWithBody = {
     ...expectedHeaders,
     'content-type': 'application/json',
+    accept: 'application/json',
   }
 
   it('GET /query/{a}/{b}', async () => {
@@ -64,7 +64,7 @@ describe('fetch', () => {
       expect(data.params).toEqual({ id: '1' })
       expect(data.body).toEqual({ list: ['b', 'c'] })
       expect(data.query).toEqual({})
-      expect(data.headers).toEqual(headersWithContentType)
+      expect(data.headers).toEqual(expectedHeadersWithBody)
     })
   })
 
@@ -77,7 +77,7 @@ describe('fetch', () => {
       expect(data.params).toEqual({ id: '1' })
       expect(data.body).toEqual(['b', 'c'])
       expect(data.query).toEqual({})
-      expect(data.headers).toEqual(headersWithContentType)
+      expect(data.headers).toEqual(expectedHeadersWithBody)
     })
   })
 
@@ -97,7 +97,7 @@ describe('fetch', () => {
       expect(data.params).toEqual({ id: '1' })
       expect(data.body).toEqual({ list: ['b', 'c'] })
       expect(data.query).toEqual({ scalar: 'a' })
-      expect(data.headers).toEqual(headersWithContentType)
+      expect(data.headers).toEqual(expectedHeadersWithBody)
     })
   })
 

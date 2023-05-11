@@ -131,7 +131,9 @@ function getFetchParams(request: Request): {
   const path = getPath(request.path, payload)
   const query = getQuery(request.method, payload, request.queryParams)
   const body = getBody(request.method, payload)
-  const headers = getHeaders(body, request.init?.headers)
+  const headers = sendBody(request.method)
+    ? getHeaders(body, request.init?.headers)
+    : new Headers(request.init?.headers)
   const url = request.baseUrl + path + query
 
   const init = {
