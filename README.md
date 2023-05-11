@@ -1,16 +1,17 @@
-[![version(scoped)](https://img.shields.io/npm/v/openapi-typescript-fetch.svg)](https://www.npmjs.com/package/openapi-typescript-fetch)
-[![codecov](https://codecov.io/gh/ajaishankar/openapi-typescript-fetch/branch/main/graph/badge.svg?token=Z8GQ6M5KAR)](https://codecov.io/gh/ajaishankar/openapi-typescript-fetch)
+[![version(scoped)](https://img.shields.io/npm/v/openapi-typescript-fetch.svg)](https://www.npmjs.com/package/@qdrant/openapi-typescript-fetch)
 
 # 📘️ openapi-typescript-fetch
 
-A typed fetch client for [openapi-typescript](https://github.com/drwpow/openapi-typescript) 
+A typed fetch client for [openapi-typescript](https://github.com/drwpow/openapi-typescript)
 
 ### Install
 
 ```bash
 npm install openapi-typescript-fetch
 ```
+
 Or
+
 ```bash
 yarn add openapi-typescript-fetch
 ```
@@ -86,7 +87,7 @@ try {
 } catch(e) {
   // check which operation threw the exception
   if (e instanceof addPet.Error) {
-    // get discriminated union { status, data } 
+    // get discriminated union { status, data }
     const error = e.getActualType()
     if (error.status === 400) {
       error.data.validationErrors // only available for a 400 response
@@ -130,6 +131,7 @@ fetcher.use(logger)
 This library can be used server side with [node-fetch](https://www.npmjs.com/package/node-fetch)
 
 Node CommonJS setup
+
 ```ts
 // install node-fetch v2
 npm install node-fetch@2
@@ -172,7 +174,10 @@ type Err = OpErrorType<paths['/pet/findByStatus']['get']>
 
 type FindPetsByStatus = TypedFetch<operations['findPetsByStatus']>
 
-const findPetsByStatus = fetcher.path('/pet/findByStatus').method('get').create()
+const findPetsByStatus = fetcher
+  .path('/pet/findByStatus')
+  .method('get')
+  .create()
 
 type Arg = FetchArgType<typeof findPetsByStatus>
 type Ret = FetchReturnType<typeof findPetsByStatus>
@@ -184,8 +189,7 @@ type Err = FetchErrorType<typeof findPetsByStatus>
 - `arrayRequestBody` - Helper to merge params when request body is an array [see issue](https://github.com/ajaishankar/openapi-typescript-fetch/issues/3#issuecomment-952963986)
 
 ```ts
-
-const body = arrayRequestBody([{ item: 1}], { param: 2})
+const body = arrayRequestBody([{ item: 1 }], { param: 2 })
 
 // body type is { item: number }[] & { param: number }
 ```
