@@ -1,5 +1,11 @@
 # @qdrant/openapi-typescript-fetch
 
+## 1.2.1
+
+### Patch Changes
+
+- [`a2120c3`](https://github.com/qdrant/openapi-typescript-fetch/commit/a2120c3f5e22cd289760784a579bb1e50d7fd280) Thanks [@Rendez](https://github.com/Rendez)! - fix: parameters query optional in CreateFetch type
+
 ## 1.2.0
 
 ### Minor Changes
