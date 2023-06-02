@@ -1,4 +1,4 @@
-[![version(scoped)](https://img.shields.io/npm/v/openapi-typescript-fetch.svg)](https://www.npmjs.com/package/@qdrant/openapi-typescript-fetch)
+[![version(scoped)](https://img.shields.io/npm/v/@qdrant/openapi-typescript-fetch.svg)](https://www.npmjs.com/package/@qdrant/openapi-typescript-fetch)
 
 # 📘️ openapi-typescript-fetch
 
