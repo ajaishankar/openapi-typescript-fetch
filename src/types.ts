@@ -137,7 +137,7 @@ type _CreateFetch<OP, Q = never> = [Q] extends [never]
   : (query: Q) => TypedFetch<OP>
 
 export type CreateFetch<M, OP> = M extends 'post' | 'put' | 'patch' | 'delete'
-  ? OP extends { parameters: { query: infer Q } }
+  ? OP extends { parameters: { query?: infer Q } }
     ? _CreateFetch<OP, { [K in keyof Q]-?: true | 1 }>
     : _CreateFetch<OP>
   : _CreateFetch<OP>

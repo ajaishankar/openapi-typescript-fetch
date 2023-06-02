@@ -1,6 +1,6 @@
 {
     "$schema": "https://unpkg.com/@changesets/config@2.3.0/schema.json",
-    "changelog": ["@changesets/changelog-github", {"repo": "@qdrant/openapi-typescript-fetch"}],
+    "changelog": ["@changesets/changelog-github", {"repo": "qdrant/openapi-typescript-fetch"}],
     "commit": false,
     "fixed": [],
     "linked": [],
