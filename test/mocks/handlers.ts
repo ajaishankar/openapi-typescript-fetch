@@ -28,6 +28,7 @@ function getResult(
 ) {
   return res(
     ctx.json({
+      url: req.url,
       params: req.params,
       headers: getHeaders(req),
       query: getQuery(req),
@@ -37,8 +38,13 @@ function getResult(
 }
 
 const HOST = 'https://api.backend.dev'
+const ANOTHER_HOST = 'https://api.another-backend.dev'
 
 const methods = {
+  withNothing: [
+    rest.get(`${HOST}/empty`, getResult),
+    rest.get(`${ANOTHER_HOST}/empty`, getResult),
+  ],
   withQuery: [rest.get(`${HOST}/query/:a/:b`, getResult)],
   withBody: ['post', 'put', 'patch', 'delete'].map((method) => {
     return (rest as any)[method](`${HOST}/body/:id`, getResult)
@@ -77,6 +83,7 @@ const methods = {
 }
 
 export const handlers = [
+  ...methods.withNothing,
   ...methods.withQuery,
   ...methods.withBody,
   ...methods.withBodyArray,

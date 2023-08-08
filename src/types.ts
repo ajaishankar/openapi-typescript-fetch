@@ -79,6 +79,10 @@ export type OpErrorType<OP> = Coalesce<
   { status: number; data: any }
 >
 
+export type OverridableConfig = {
+  baseUrl?: string
+}
+
 export type CustomRequestInit = Omit<RequestInit, 'headers'> & {
   readonly headers: Headers
 }
@@ -90,7 +94,7 @@ export type Fetch = (
 
 export type _TypedFetch<OP> = (
   arg: OpArgType<OP>,
-  init?: RequestInit,
+  init?: RequestInit & OverridableConfig,
 ) => Promise<ApiResponse<OpReturnType<OP>>>
 
 export type TypedFetch<OP> = _TypedFetch<OP> & {
@@ -139,7 +143,7 @@ export type Request = {
   path: string
   queryParams: string[] // even if a post these will be sent in query
   payload: any
-  init?: RequestInit
+  init?: RequestInit & OverridableConfig
   fetch: Fetch
 }
 

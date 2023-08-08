@@ -231,6 +231,16 @@ describe('fetch', () => {
     expect(data.headers).toEqual({ ...expectedHeaders, admin: 'true' })
   })
 
+  it('override baseUrl', async () => {
+    const path = '/empty'
+    const newBaseUrl = 'https://api.another-backend.dev'
+    const fun = fetcher.path(path).method('get').create()
+
+    const { data } = await fun(undefined, { baseUrl: newBaseUrl })
+
+    expect(data.url).toEqual(`${newBaseUrl}${path}`)
+  })
+
   it('middleware', async () => {
     const fun = fetcher
       .path('/bodyquery/{id}')

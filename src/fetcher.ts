@@ -118,14 +118,16 @@ function getFetchParams(request: Request) {
     request.payload,
   )
 
+  const { baseUrl, ...requestInit } = request.init || {}
+
   const path = getPath(request.path, payload)
   const query = getQuery(request.method, payload, request.queryParams)
   const body = getBody(request.method, payload)
   const headers = getHeaders(body, request.init?.headers)
-  const url = request.baseUrl + path + query
+  const url = (baseUrl || request.baseUrl) + path + query
 
   const init = {
-    ...request.init,
+    ...requestInit,
     method: request.method.toUpperCase(),
     headers,
     body,

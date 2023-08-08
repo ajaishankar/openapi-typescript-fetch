@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-types */
 export type Data = {
+  url: string
   params: string[]
   headers: Record<string, string>
   query: Record<string, string | string[]>
@@ -40,6 +41,16 @@ type BodyAndQuery = {
 }
 
 export type paths = {
+  '/empty': {
+    get: {
+      parameters: {}
+      responses: {
+        200: {
+          schema: Data
+        }
+      }
+    }
+  }
   '/query/{a}/{b}': {
     get: Query
   }
