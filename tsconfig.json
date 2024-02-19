@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "module": "ES2020",
+        "module": "node16",
         "outDir": "./dist/esm"
     },
     "extends": "./tsconfig.base.json"

@@ -5,14 +5,15 @@
         "declarationDir": "dist",
         "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
-        "lib": ["dom", "dom.iterable", "es2019"],
+        "lib": ["dom", "dom.iterable", "es2020"],
         "moduleResolution": "nodenext",
         "noImplicitReturns": true,
         "removeComments": true,
         "sourceMap": false,
         "strict": true,
-        "target": "es2019",
-        "skipLibCheck": true
+        "target": "ES2020",
+        "skipLibCheck": true,
+        "allowJs": true
     },
     "include": ["src"]
 }

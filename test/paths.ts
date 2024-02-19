@@ -17,7 +17,7 @@ type Query = {
 type Body = {
   parameters: {
     path: { id: number }
-    body: { payload: { list: string[] } }
+    body: { payload: { list: string[]; bigInt: BigInt } }
   }
   responses: { 200: { schema: Data } }
 }

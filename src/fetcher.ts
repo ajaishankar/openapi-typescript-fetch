@@ -14,6 +14,7 @@ import {
   _TypedFetch,
   TypedFetch,
 } from './types.js'
+import { JSONParse, JSONStringify } from 'json-with-bigint'
 
 const sendBody = (method: Method) =>
   method === 'post' ||
@@ -94,7 +95,8 @@ function getBody(method: Method, payload: unknown): CustomRequestInit['body'] {
   if (!sendBody(method)) {
     return
   }
-  const body = payload instanceof FormData ? payload : JSON.stringify(payload)
+  const body =
+    payload instanceof FormData ? payload : JSONStringify(payload as any)
   // if delete don't send body if empty
   return method === 'delete' && body === '{}' ? undefined : body
 }
@@ -147,18 +149,20 @@ function getFetchParams(request: Request): {
 }
 
 async function getResponseData(response: Response) {
-  const contentType = response.headers.get('content-type')
   if (response.status === 204 /* no content */) {
-    return undefined
+    return
   }
-  if (contentType && contentType.indexOf('application/json') !== -1) {
-    return await response.json()
+
+  const contentType = response.headers.get('content-type')
+  const responseText = await response.text()
+  if (contentType && contentType.includes('application/json')) {
+    return JSONParse(responseText)
   }
-  const text = await response.text()
+
   try {
-    return JSON.parse(text)
+    return JSONParse(responseText)
   } catch (e) {
-    return text
+    return responseText
   }
 }
 
