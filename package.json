@@ -98,15 +98,6 @@
     "singleQuote": true,
     "semi": false
   },
-  "pnpm": {
-    "overrides": {
-      "@babel/traverse": "7.23.2",
-      "semver": "7.5.2",
-      "tough-cookie": "4.1.3",
-      "word-wrap": "1.2.4",
-      "graphql": " 16.8.1 "
-    }
-  },
   "scripts": {
     "clean": "rimraf './dist'",
     "build": "pnpm clean && tsc -p tsconfig.json && tsc -p tsconfig.es6.json && tsc -p tsconfig.cjs.json && node post-build.js",
@@ -118,8 +109,5 @@
     "tsc:check": "tsc --noEmit",
     "ci:version": "pnpm changeset version && pnpm install --no-frozen-lockfile && git add .",
     "ci:release": "pnpm changeset publish"
-  },
-  "dependencies": {
-    "json-with-bigint": "^2.1.0"
   }
 }

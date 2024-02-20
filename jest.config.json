@@ -5,10 +5,6 @@
   "moduleNameMapper": {
     "^(\\.{1,2}/.*)\\.js$": "$1"
   },
-  "transformIgnorePatterns": ["<rootDir>/node_modules/.pnpm/(?!(json-with-bigint)@)"],
-  "transform": {
-    "\\.[jt]sx?$": "ts-jest"
-  },
   "globals": {
     "ts-jest": {
       "tsconfig": {

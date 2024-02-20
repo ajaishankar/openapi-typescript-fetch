@@ -59,11 +59,10 @@ describe('fetch', () => {
       const { data } = await fun({
         id: 1,
         list: ['b', 'c'],
-        bigInt: BigInt('9007199254740992'),
       })
 
       expect(data.params).toEqual({ id: '1' })
-      expect(data.body).toEqual({ list: ['b', 'c'], bigInt: 9007199254740992n })
+      expect(data.body).toEqual({ list: ['b', 'c'] })
       expect(data.query).toEqual({})
       expect(data.headers).toEqual(expectedHeadersWithBody)
     })
@@ -113,14 +112,14 @@ describe('fetch', () => {
   })
 
   it(`POST /accepted`, async () => {
-    const fun = fetcher.path('/accepted').method('post').create({})
+    const fun = fetcher.path('/accepted').method('post').create()
     const { status, data } = await fun(undefined)
     expect(status).toBe(202)
     expect(data.message).toBe('Accepted')
   })
 
   it(`POST /nocontent`, async () => {
-    const fun = fetcher.path('/nocontent').method('post').create({})
+    const fun = fetcher.path('/nocontent').method('post').create()
     const { status, data } = await fun(undefined)
     expect(status).toBe(204)
     expect(data).toBeUndefined()
