@@ -1,11 +1,5 @@
 # @qdrant/openapi-typescript-fetch
 
-## 1.2.2
-
-### Patch Changes
-
-- [`2ffe33f`](https://github.com/qdrant/openapi-typescript-fetch/commit/2ffe33f8437d1fcc4bd337dccea4588887591727) Thanks [@Rendez](https://github.com/Rendez)! - Add bigint support using `json-with-bigint` package.
-
 ## 1.2.1
 
 ### Patch Changes
