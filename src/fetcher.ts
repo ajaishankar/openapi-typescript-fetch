@@ -183,7 +183,7 @@ function wrapMiddlewares(middlewares: Middleware[], fetch: Fetch): Fetch {
       return fetch(url, init)
     }
     const current = middlewares[index]
-    return await current(url, init, (nextUrl, nextInit) =>
+    return await current!(url, init, (nextUrl, nextInit) =>
       handler(index + 1, nextUrl, nextInit),
     )
   }

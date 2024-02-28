@@ -1,7 +1,7 @@
 {
     "editor.formatOnSave": false,
     "editor.codeActionsOnSave": {
-        "source.fixAll.eslint": true
+        "source.fixAll.eslint": "explicit"
     },
     "typescript.tsdk": "node_modules/typescript/lib",
     "files.exclude": {
@@ -13,7 +13,6 @@
         "**/lib": true,
         "**/node_modules": true,
         "**/coverage": true,
-        "**/dist": true,
         "**/tsconfig.tsbuildinfo": true,
         "**/yarn-error.log": true
     }
