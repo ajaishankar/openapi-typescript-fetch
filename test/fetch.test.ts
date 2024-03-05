@@ -86,7 +86,7 @@ describe('fetch', () => {
       const fun = fetcher
         .path('/bodyquery/{id}')
         .method(method)
-        .create({ scalar: 1 })
+        .create({ scalar: 1, optional: 1 })
 
       const { data } = await fun({
         id: 1,
@@ -235,7 +235,7 @@ describe('fetch', () => {
     const fun = fetcher
       .path('/bodyquery/{id}')
       .method('post')
-      .create({ scalar: 1 })
+      .create({ scalar: 1, optional: 1 })
 
     const captured = { url: '', body: '' }
 
