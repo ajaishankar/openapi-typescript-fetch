@@ -99,6 +99,49 @@ try {
 }
 ```
 
+### Binary Data
+
+It is possible to handle some content types as binary data.
+You can specify these as a string, regular expression, list of regular expressions and/or strings, or a custom discriminator function
+If one of the strings or regular expressions you provided matches the Content-Type header returned by the endpoint,
+or your discriminator function, called with the contents of the Content-Type header, returns `true`, the response body will be returned as a [binary blob](https://developer.mozilla.org/en-US/docs/Web/API/Blob).
+
+```ts
+
+fetcher.configure({
+  baseUrl: 'https://example.com/api',
+  asBlob: 'application/octet-stream'
+})
+
+// or
+
+fetcher.configure({
+  baseUrl: 'https://example.com/api',
+  asBlob: /^application\/(?!json)/
+})
+
+// or
+
+fetcher.configure({
+  baseUrl: 'https://example.com/api',
+  asBlob: ['application/pdf', 'audio/vorbis']
+})
+
+// or
+
+fetcher.configure({
+  baseUrl: 'https://example.com/api',
+  asBlob: (contentType: string) => contentType.startsWith('application/o')
+})
+
+// data is going to be a Blob
+const { data } = await fetcher.path('/binary/data').method('get').create()(
+  {},
+  { headers: { Accept: 'application/octet-stream' } },
+)
+
+```
+
 ### Middleware
 
 Middlewares can be used to pre and post process fetch operations (log api calls, add auth headers etc)
