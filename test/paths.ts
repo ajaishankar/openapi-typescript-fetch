@@ -9,7 +9,16 @@ export type Data = {
 type Query = {
   parameters: {
     path: { a: number; b: string }
-    query: { scalar: string; list: string[] }
+    query: {
+      scalar: string
+      list: string[]
+      object?: {
+        nestedObject: {
+          nestedKey: string
+        }
+        nestedList: string[]
+      }
+    }
   }
   responses: { 200: { schema: Data } }
 }
