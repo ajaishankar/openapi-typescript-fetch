@@ -13,6 +13,18 @@ export type OpenapiPaths<Paths> = {
   }
 }
 
+type JSONBody <T> =
+  | {
+      content: {
+        'application/json': T
+      }
+    }
+  | {
+      content: {
+        [K in `application/json;${string}`]: T
+      }
+    };
+
 export type OpArgType<OP> = OP extends {
   parameters?: {
     path?: infer P
@@ -22,11 +34,7 @@ export type OpArgType<OP> = OP extends {
     cookie?: unknown // ignore
   }
   // openapi 3
-  requestBody?: {
-    content: {
-      'application/json': infer RB
-    }
-  }
+  requestBody?: JSONBody<infer RB>
 }
   ? P & Q & (B extends Record<string, unknown> ? B[keyof B] : unknown) & RB
   : Record<string, never>
@@ -37,7 +45,7 @@ type OpResponseTypes<OP> = OP extends {
   ? {
       [S in keyof R]: R[S] extends { schema?: infer S } // openapi 2
         ? S
-        : R[S] extends { content: { 'application/json': infer C } } // openapi 3
+        : R[S] extends JSONBody<infer C> // openapi 3
         ? C
         : S extends 'default'
         ? R[S]
