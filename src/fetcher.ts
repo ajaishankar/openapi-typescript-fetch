@@ -1,3 +1,4 @@
+import explodeQueryFormStyle from './explodeQueryFormStyle'
 import {
   ApiError,
   ApiResponse,
@@ -21,28 +22,12 @@ const sendBody = (method: Method) =>
   method === 'patch' ||
   method === 'delete'
 
-function queryString(params: Record<string, unknown>): string {
-  const qs: string[] = []
+function queryString<TParams extends Record<string, unknown>>(
+  params: TParams,
+): string {
+  const encoded = explodeQueryFormStyle([], '', params).join('&')
 
-  const encode = (key: string, value: unknown) =>
-    `${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`
-
-  Object.keys(params).forEach((key) => {
-    const value = params[key]
-    if (value != null) {
-      if (Array.isArray(value)) {
-        value.forEach((value) => qs.push(encode(key, value)))
-      } else {
-        qs.push(encode(key, value))
-      }
-    }
-  })
-
-  if (qs.length > 0) {
-    return `?${qs.join('&')}`
-  }
-
-  return ''
+  return encoded.length ? `?${encoded}` : ''
 }
 
 function getPath(path: string, payload: Record<string, any>) {
@@ -53,15 +38,12 @@ function getPath(path: string, payload: Record<string, any>) {
   })
 }
 
-function getQuery(
-  method: Method,
-  payload: Record<string, any>,
-  query: string[],
-) {
+function getQuery(request: Request, payload: Record<string, any>) {
+  const { method, queryParams } = request
   let queryObj = {} as any
 
   if (sendBody(method)) {
-    query.forEach((key) => {
+    queryParams.forEach((key) => {
       queryObj[key] = payload[key]
       delete payload[key]
     })
@@ -119,7 +101,7 @@ function getFetchParams(request: Request) {
   )
 
   const path = getPath(request.path, payload)
-  const query = getQuery(request.method, payload, request.queryParams)
+  const query = getQuery(request, payload)
   const body = getBody(request.method, payload)
   const headers = getHeaders(body, request.init?.headers)
   const url = request.baseUrl + path + query
