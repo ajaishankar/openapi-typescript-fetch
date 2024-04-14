@@ -23,6 +23,26 @@ type Op3 = Omit<paths3['/v1/account_links']['post'], 'requestBody'> & {
   }
 }
 
+type Op4 = Omit<paths3['/v1/account_links']['post'], 'requestBody'> & {
+  requestBody: {
+    content: {
+      'application/json;charset=utf-8': paths3['/v1/account_links']['post']['requestBody']['content']['application/x-www-form-urlencoded']
+    }
+  }
+  responses: {
+    200: {
+      content: {
+        'application/json;charset=UTF-8': paths3['/v1/account_links']['post']['responses']['200']['content']['application/json']
+      }
+    }
+    default: {
+      content: {
+        'application/json; charset=UTF-8': paths3['/v1/account_links']['post']['responses']['default']['content']['application/json']
+      }
+    }
+  }
+}
+
 interface Openapi2 {
   Argument: OpArgType<Op2>
   Return: OpReturnType<Op2>
@@ -35,6 +55,13 @@ interface Openapi3 {
   Return: OpReturnType<Op3>
   Default: Pick<OpDefaultReturnType<Op3>['error'], 'type' | 'message'>
   Error: Pick<OpErrorType<Op3>['data']['error'], 'type' | 'message'>
+}
+
+interface Openapi4 {
+  Argument: OpArgType<Op4>
+  Return: OpReturnType<Op4>
+  Default: Pick<OpDefaultReturnType<Op4>['error'], 'type' | 'message'>
+  Error: Pick<OpErrorType<Op4>['data']['error'], 'type' | 'message'>
 }
 
 type Same<A, B> = A extends B ? (B extends A ? true : false) : false
@@ -127,5 +154,35 @@ describe('infer', () => {
 
     const err: Err = { data: { error: {} } } as any
     expect(err.data.error.charge).toBeUndefined()
+  })
+
+  describe('application/json with charset', () => {
+    it('argument', () => {
+      const same: Same<Openapi4['Argument'], Openapi3['Argument']> = true
+      expect(same).toBe(true)
+
+      // @ts-expect-error -- missing properties
+      const arg: Openapi4['Argument'] = {}
+      expect(arg.account).toBeUndefined()
+    })
+
+    it('return', () => {
+      const same: Same<Openapi4['Return'], Openapi3['Return']> = true
+      expect(same).toBe(true)
+
+      // @ts-expect-error -- missing properties
+      const ret: Openapi4['Return'] = {}
+      expect(ret.url).toBeUndefined()
+    })
+
+    it('default', () => {
+      const same: Same<Openapi4['Default'], Openapi3['Default']> = true
+      expect(same).toBe(true)
+    })
+
+    it('error', () => {
+      const same: Same<Openapi4['Error'], Openapi3['Error']> = true
+      expect(same).toBe(true)
+    })
   })
 })

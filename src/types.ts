@@ -13,6 +13,14 @@ export type OpenapiPaths<Paths> = {
   }
 }
 
+type ApplicationJson = 'application/json' | `application/json;${string}`
+
+type JsonResponse<T> = T extends Record<string, unknown>
+  ? {
+      [K in keyof T]: K extends ApplicationJson ? T[K] : never
+    }[keyof T]
+  : unknown
+
 export type OpArgType<OP> = OP extends {
   parameters?: {
     path?: infer P
@@ -23,12 +31,13 @@ export type OpArgType<OP> = OP extends {
   }
   // openapi 3
   requestBody?: {
-    content: {
-      'application/json': infer RB
-    }
+    content: infer RB
   }
 }
-  ? P & Q & (B extends Record<string, unknown> ? B[keyof B] : unknown) & RB
+  ? P &
+      Q &
+      (B extends Record<string, unknown> ? B[keyof B] : unknown) &
+      JsonResponse<RB>
   : Record<string, never>
 
 type OpResponseTypes<OP> = OP extends {
@@ -129,10 +138,19 @@ export type Middleware = (
   next: Fetch,
 ) => Promise<ApiResponse>
 
+export type BlobTypeSelector = (contentType: string) => boolean
+
+export type ContentTypeDiscriminator =
+  | string
+  | RegExp
+  | Array<string | RegExp>
+  | BlobTypeSelector
+
 export type FetchConfig = {
   baseUrl?: string
   init?: RequestInit
   use?: Middleware[]
+  asBlob?: ContentTypeDiscriminator
 }
 
 export type Request = {
