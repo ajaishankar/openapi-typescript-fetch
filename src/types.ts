@@ -28,7 +28,10 @@ export type OpArgType<OP> = OP extends {
     }
   }
 }
-  ? P & Q & (B extends Record<string, unknown> ? B[keyof B] : unknown) & RB
+  ? (P extends Record<string, unknown> ? P : unknown) &
+      (Q extends Record<string, unknown> ? Q : unknown) &
+      (B extends Record<string, unknown> ? B[keyof B] : unknown) &
+      RB
   : Record<string, never>
 
 type OpResponseTypes<OP> = OP extends {
