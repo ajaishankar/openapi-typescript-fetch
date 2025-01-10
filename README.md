@@ -36,8 +36,6 @@ npx openapi-typescript https://petstore.swagger.io/v2/swagger.json --output pets
 **Typed fetch client**
 
 ```ts
-import 'whatwg-fetch'
-
 import { Fetcher } from 'openapi-typescript-fetch'
 
 import { paths } from './petstore'
@@ -125,30 +123,6 @@ fetcher.configure({
 fetcher.use(logger)
 ```
 
-### Server Side Usage
-
-This library can be used server side with [node-fetch](https://www.npmjs.com/package/node-fetch)
-
-Node CommonJS setup
-```ts
-// install node-fetch v2
-npm install node-fetch@2
-npm install @types/node-fetch@2
-
-// fetch-polyfill.ts
-import fetch, { Headers, Request, Response } from 'node-fetch'
-
-if (!globalThis.fetch) {
-    globalThis.fetch = fetch as any
-    globalThis.Headers = Headers as any
-    globalThis.Request = Request as any
-    globalThis.Response = Response as any
-}
-
-// index.ts
-import './fetch-polyfill'
-```
-
 ### Utility Types
 
 - `OpArgType` - Infer argument type of an operation
@@ -188,6 +162,25 @@ type Err = FetchErrorType<typeof findPetsByStatus>
 const body = arrayRequestBody([{ item: 1}], { param: 2})
 
 // body type is { item: number }[] & { param: number }
+```
+
+### Changing the baseUrl at runtime
+
+The baseUrl can be configured with a function that returns the url at runtime
+
+```ts
+fetcher.configure({
+  baseUrl: () => getBaseUrl(...)
+})
+```
+
+It can also be overriden per method invocation
+
+```ts
+await findPetsByStatus(
+  { status: ['available', 'pending'] },
+  { baseUrl: "https://staging.petstore.swagger.io/v2" }
+)
 ```
 
 Happy fetching! 👍

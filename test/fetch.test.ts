@@ -231,6 +231,32 @@ describe('fetch', () => {
     expect(data.headers).toEqual({ ...expectedHeaders, admin: 'true' })
   })
 
+  describe('baseUrl', () => {
+    const baseUrl = 'https://api2.backend.dev'
+    const payload = {
+      a: 1,
+      b: '2',
+      scalar: 'a',
+      list: ['b', 'c'],
+    }
+
+    it('can override baseUrl per invocation', async () => {
+      fetcher.configure({}) // empty baseUrl
+      const fun = fetcher.path('/query/{a}/{b}').method('get').create()
+      const { data } = await fun(payload, { baseUrl })
+      expect(data.host).toBe('api2.backend.dev')
+    })
+
+    it('can configure with a function', async () => {
+      fetcher.configure({
+        baseUrl: () => baseUrl,
+      })
+      const fun = fetcher.path('/query/{a}/{b}').method('get').create()
+      const { data } = await fun(payload)
+      expect(data.host).toBe('api2.backend.dev')
+    })
+  })
+
   it('middleware', async () => {
     const fun = fetcher
       .path('/bodyquery/{id}')

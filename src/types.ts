@@ -92,7 +92,7 @@ export type Fetch = (
 
 export type _TypedFetch<OP> = (
   arg: OpArgType<OP>,
-  init?: RequestInit,
+  init?: RequestInit & { baseUrl?: string },
 ) => Promise<ApiResponse<OpReturnType<OP>>>
 
 export type TypedFetch<OP> = _TypedFetch<OP> & {
@@ -130,7 +130,7 @@ export type Middleware = (
 ) => Promise<ApiResponse>
 
 export type FetchConfig = {
-  baseUrl?: string
+  baseUrl?: string | (() => string)
   init?: RequestInit
   use?: Middleware[]
 }

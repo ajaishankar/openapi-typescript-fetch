@@ -36,10 +36,30 @@ function getResult(
   )
 }
 
+function getResultWithHost(
+  req: RestRequest,
+  res: ResponseComposition,
+  ctx: RestContext,
+) {
+  return res(
+    ctx.json({
+      params: req.params,
+      headers: getHeaders(req),
+      query: getQuery(req),
+      body: req.body,
+      host: new URL(req.url).host,
+    }),
+  )
+}
+
 const HOST = 'https://api.backend.dev'
+const HOST2 = 'https://api2.backend.dev'
 
 const methods = {
-  withQuery: [rest.get(`${HOST}/query/:a/:b`, getResult)],
+  withQuery: [
+    rest.get(`${HOST}/query/:a/:b`, getResult),
+    rest.get(`${HOST2}/query/:a/:b`, getResultWithHost),
+  ],
   withBody: ['post', 'put', 'patch', 'delete'].map((method) => {
     return (rest as any)[method](`${HOST}/body/:id`, getResult)
   }),

@@ -4,6 +4,7 @@ export type Data = {
   headers: Record<string, string>
   query: Record<string, string | string[]>
   body: any
+  host?: string
 }
 
 type Query = {

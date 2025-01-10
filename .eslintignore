@@ -1,2 +1,3 @@
 test/examples/*.ts
 dist
+build.js

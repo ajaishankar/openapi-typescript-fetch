@@ -183,6 +183,7 @@ function wrapMiddlewares(middlewares: Middleware[], fetch: Fetch): Fetch {
       return fetch(url, init)
     }
     const current = middlewares[index]
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return await current!(url, init, (nextUrl, nextInit) =>
       handler(index + 1, nextUrl, nextInit),
     )
@@ -228,7 +229,7 @@ function createFetch<OP>(fetch: _TypedFetch<OP>): TypedFetch<OP> {
 }
 
 function fetcher<Paths>() {
-  let baseUrl = ''
+  let baseUrl = '' as string | (() => string)
   let defaultInit: RequestInit = {}
   const middlewares: Middleware[] = []
   const fetch = wrapMiddlewares(middlewares, fetchJson)
@@ -246,7 +247,9 @@ function fetcher<Paths>() {
         create: ((queryParams?: Record<string, true | 1>) =>
           createFetch((payload, init) =>
             fetchUrl({
-              baseUrl: baseUrl || '',
+              baseUrl:
+                init?.baseUrl ??
+                (typeof baseUrl === 'function' ? baseUrl() : baseUrl),
               path: path as string,
               method: method as Method,
               queryParams: Object.keys(queryParams || {}),
@@ -254,7 +257,7 @@ function fetcher<Paths>() {
               init: mergeRequestInit(defaultInit, init),
               fetch,
             }),
-          )) as CreateFetch<M, Paths[P][M]>,
+          )) as unknown as CreateFetch<M, Paths[P][M]>,
       }),
     }),
   }
