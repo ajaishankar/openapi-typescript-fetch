@@ -1,7 +1,7 @@
 {
   "name": "openapi-typescript-fetch",
   "description": "A typed fetch client for openapi-typescript",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "engines": {
     "node": ">= 12.0.0",
     "npm": ">= 7.0.0"
