@@ -72,10 +72,14 @@ function getQuery(
   return queryString(queryObj)
 }
 
-function getHeaders(body?: string, init?: HeadersInit) {
+function getHeaders(body?: CustomRequestInit['body'], init?: HeadersInit) {
   const headers = new Headers(init)
 
-  if (body !== undefined && !headers.has('Content-Type')) {
+  if (
+    body !== undefined &&
+    !(body instanceof FormData) &&
+    !headers.has('Content-Type')
+  ) {
     headers.append('Content-Type', 'application/json')
   }
 
@@ -86,8 +90,11 @@ function getHeaders(body?: string, init?: HeadersInit) {
   return headers
 }
 
-function getBody(method: Method, payload: any) {
-  const body = sendBody(method) ? JSON.stringify(payload) : undefined
+function getBody(method: Method, payload: unknown): CustomRequestInit['body'] {
+  if (!sendBody(method)) {
+    return
+  }
+  const body = payload instanceof FormData ? payload : JSON.stringify(payload)
   // if delete don't send body if empty
   return method === 'delete' && body === '{}' ? undefined : body
 }
@@ -108,7 +115,10 @@ function mergeRequestInit(
   return { ...first, ...second, headers }
 }
 
-function getFetchParams(request: Request) {
+function getFetchParams(request: Request): {
+  url: string
+  init: CustomRequestInit
+} {
   // clone payload
   // if body is a top level array [ 'a', 'b', param: value ] with param values
   // using spread [ ...payload ] returns [ 'a', 'b' ] and skips custom keys
