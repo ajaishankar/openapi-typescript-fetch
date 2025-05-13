@@ -118,6 +118,20 @@ describe('fetch', () => {
     expect(data).toBeUndefined()
   })
 
+  it(`GET /notmodified (should not read body)`, async () => {
+    const fun = fetcher.path('/notmodified').method('get').create()
+    try {
+      await fun(undefined)
+      throw new Error('should throw api exception')
+    } catch (err) {
+      expect(err instanceof ApiError).toBe(true)
+      if (err instanceof ApiError) {
+        expect(err.headers.get('content-type')).toBe('application/json')
+        expect(err.status).toBe(304)
+      }
+    }
+  })
+
   it('GET /error', async () => {
     expect.assertions(3)
 

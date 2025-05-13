@@ -87,6 +87,14 @@ const methods = {
     rest.post(`${HOST}/nocontent`, (req, res, ctx) => {
       return res(ctx.status(204))
     }),
+    rest.get(`${HOST}/notmodified`, (req, res) => {
+      // force bad json response
+      return res((res) => {
+        res.status = 304
+        res.headers.set('Content-Type', 'application/json')
+        return res
+      })
+    }),
     rest.get(`${HOST}/defaulterror`, (req, res, ctx) => {
       return res(ctx.status(500), ctx.body('internal server error'))
     }),

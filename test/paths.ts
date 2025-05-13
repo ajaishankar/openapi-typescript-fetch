@@ -70,6 +70,14 @@ export type paths = {
       }
     }
   }
+  '/notmodified': {
+    get: {
+      parameters: {}
+      responses: {
+        304: unknown
+      }
+    }
+  }
   '/error/{status}': {
     get: {
       parameters: {
