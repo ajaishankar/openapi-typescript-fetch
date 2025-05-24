@@ -23,12 +23,18 @@ export type OpArgType<OP> = OP extends {
   }
   // openapi 3
   requestBody?: {
-    content: {
-      'application/json': infer RB
-    }
+    content:
+      | {
+          'application/json': infer RB
+        }
+      | {
+          'multipart/form-data': infer FD
+        }
   }
 }
-  ? P & Q & (B extends Record<string, unknown> ? B[keyof B] : unknown) & RB
+  ? FD extends Record<string, string>
+    ? FormData
+    : P & Q & (B extends Record<string, unknown> ? B[keyof B] : unknown) & RB
   : Record<string, never>
 
 type OpResponseTypes<OP> = OP extends {
