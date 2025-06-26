@@ -13,6 +13,9 @@ export type OpenapiPaths<Paths> = {
   }
 }
 
+// https://github.com/ajaishankar/openapi-typescript-fetch/issues/71#issuecomment-2847360598
+type NonNever<T> = [T] extends [never | undefined] ? unknown : T
+
 export type OpArgType<OP> = OP extends {
   parameters?: {
     path?: infer P
@@ -28,7 +31,10 @@ export type OpArgType<OP> = OP extends {
     }
   }
 }
-  ? P & Q & (B extends Record<string, unknown> ? B[keyof B] : unknown) & RB
+  ? NonNever<P> &
+      NonNever<Q> &
+      (B extends Record<string, unknown> ? NonNever<B[keyof B]> : unknown) &
+      NonNever<RB>
   : Record<string, never>
 
 type OpResponseTypes<OP> = OP extends {

@@ -11,6 +11,7 @@ import {
 } from '../src'
 import { paths as paths2 } from './examples/stripe-openapi2'
 import { paths as paths3 } from './examples/stripe-openapi3'
+import { paths as paths7 } from './examples/petstore-openapi-ts7'
 
 type Op2 = paths2['/v1/account_links']['post']
 
@@ -46,6 +47,14 @@ describe('infer', () => {
 
     const arg: Openapi2['Argument'] = {} as any
     expect(arg.account).toBeUndefined()
+  })
+
+  it('argument (openapi-typescript7)', () => {
+    const same: Same<
+      OpArgType<paths7['/pet/findByStatus']['get']>,
+      { status?: 'available' | 'pending' | 'sold' }
+    > = true
+    expect(same).toBe(true)
   })
 
   it('return', () => {
